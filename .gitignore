@@ -13,3 +13,6 @@ build/
 # SPM
 .swiftpm/
 .build/
+
+# Claude Code local (per-machine) settings
+.claude/settings.local.json
