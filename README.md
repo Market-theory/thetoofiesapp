@@ -6,8 +6,11 @@ always knows how recently you last indulged.
 
 ## The points economy
 
-- **Earn:** every completed dessert-free day banks **+10 pts**, credited at
-  midnight.
+- **Earn (clean days):** every completed dessert-free day banks **+10 pts**,
+  credited at midnight.
+- **Earn (activity):** connect Apple Health (read-only, opt-in) and every
+  **1,500 steps earns +1 pt, up to +15/day** — credited even on dessert days.
+  A walk always counts; a 21k-step theme-park day banks +14 on its own.
 - **Spend:** a dessert costs points (default **30 ≈ 3 clean days**, adjustable
   10–100 in settings). Points roll over — save up for special occasions.
 - **Forgiving by design:** logging is never blocked and there's no debt. A
@@ -22,6 +25,8 @@ always knows how recently you last indulged.
 - **Points meter** — progress toward the next dessert.
 - **One-tap logging** — cookie, cake, ice cream, chocolate, donut, candy, pie,
   cupcake — with haptics.
+- **Activity** — today's steps and the bonus banking at midnight (once Apple
+  Health is connected).
 - **Stats** — points balance, last dessert (recency), clean-day streak.
 - **Last-7-days chart** — desserts per day (Swift Charts); tap a bar to see
   what you ate.
@@ -60,9 +65,12 @@ your provisioning setup.
 ## How the balance works
 
 `TreatStore.balance(now:)` derives the balance from full history: +10 for
-every completed dessert-free day since install, minus each dessert's recorded
-price, folded in time order with a floor of zero. Deleting an entry
-self-corrects — the freed day earns its credit back automatically.
+every completed dessert-free day since install, plus step credits for every
+completed day when Health is connected, minus each dessert's recorded price,
+folded in time order with a floor of zero. Deleting an entry self-corrects —
+the freed day earns its credit back automatically. Step totals are cached in
+the snapshot and refreshed from HealthKit on launch/foreground, so the
+balance is stable offline.
 
 ## Tooling
 

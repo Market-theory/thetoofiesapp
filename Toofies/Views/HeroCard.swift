@@ -48,9 +48,13 @@ struct HeroCard: View {
             return "\(avail.balance) points banked — enough for \(desserts). You've earned it."
         }
         let days = "\(avail.cleanDaysNeeded) clean day\(avail.cleanDaysNeeded == 1 ? "" : "s")"
+        let pending = store.pendingPointsToday(now: now)
+        let untilMidnight = Format.countdown(from: now, to: store.nextMidnight(after: now))
         if cleanToday {
-            let untilMidnight = Format.countdown(from: now, to: store.nextMidnight(after: now))
-            return "About \(days) away — today banks +\(TreatStore.pointsPerCleanDay) pts at midnight (in \(untilMidnight))."
+            return "About \(days) away — today banks +\(pending) pts at midnight (in \(untilMidnight))."
+        }
+        if pending > 0 {
+            return "Your steps still count — +\(pending) pts at midnight (in \(untilMidnight))."
         }
         return "Earning resumes tomorrow — about \(days) to go."
     }

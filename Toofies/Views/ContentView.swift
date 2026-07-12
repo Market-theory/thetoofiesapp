@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(TreatStore.self) private var store
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         ScrollView {
@@ -10,6 +11,7 @@ struct ContentView: View {
                 HeroCard()
                 PointsMeterCard()
                 QuickLogCard()
+                ActivityCard()
                 StatTilesRow()
                 WeeklyChartCard()
                 HistoryCard()
@@ -18,6 +20,14 @@ struct ContentView: View {
             .padding(16)
         }
         .background(Color(.systemGroupedBackground))
+        .task {
+            await store.syncSteps()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                Task { await store.syncSteps() }
+            }
+        }
     }
 
     private var header: some View {

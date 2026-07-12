@@ -8,6 +8,10 @@ final class TreatStore {
 
     /// Every completed dessert-free day banks this many points.
     static let pointsPerCleanDay = 10
+    /// With Apple Health connected, every 1,500 steps in a day earns +1 pt…
+    static let stepsPerActivityPoint = 1_500
+    /// …up to this daily cap (a 21k-step theme-park day banks +14).
+    static let maxActivityPointsPerDay = 15
 
     /// What one dessert costs, in points (adjustable in settings).
     var dessertCost: Int = 30 {
@@ -16,6 +20,11 @@ final class TreatStore {
     var entries: [TreatEntry] = [] {
         didSet { persist() }
     }
+    /// User opted in to step-based earning via Apple Health.
+    private(set) var healthConnected = false
+    /// Cached daily step totals (start-of-day → steps) so the balance is
+    /// stable offline; refreshed from HealthKit on launch and on connect.
+    private(set) var stepsByDay: [Date: Int] = [:]
     private(set) var installDate: Date = .now
 
     private var isLoading = false
@@ -36,11 +45,16 @@ final class TreatStore {
     }
 
     // MARK: - Points economy
-    // Earn-and-spend: each completed dessert-free day credits points at
-    // midnight; each dessert debits the price in force when it was logged.
-    // The balance is derived from the full history with a floor of zero, so
-    // an unaffordable dessert is forgiven (never carried as debt) and
-    // deleting an entry self-corrects — the freed day earns its credit back.
+    // Earn-and-spend: each completed dessert-free day credits base points at
+    // midnight; with Health connected, each completed day also credits step
+    // points (dessert or not — a walk always counts). Each dessert debits the
+    // price in force when it was logged. The balance is derived from the full
+    // history with a floor of zero, so an unaffordable dessert is forgiven
+    // (never carried as debt) and deleting an entry self-corrects.
+
+    static func activityPoints(forSteps steps: Int) -> Int {
+        min(steps / stepsPerActivityPoint, maxActivityPointsPerDay)
+    }
 
     func balance(now: Date = .now) -> Int {
         var events: [(date: Date, delta: Int)] = entries.map { ($0.date, -$0.pointsSpent) }
@@ -49,8 +63,15 @@ final class TreatStore {
         var day = firstDay
         while day < todayStart {
             guard let next = calendar.date(byAdding: .day, value: 1, to: day) else { break }
+            var credit = 0
             if desserts(from: day, to: next).isEmpty {
-                events.append((next, Self.pointsPerCleanDay))
+                credit += Self.pointsPerCleanDay
+            }
+            if healthConnected {
+                credit += Self.activityPoints(forSteps: stepsByDay[day] ?? 0)
+            }
+            if credit > 0 {
+                events.append((next, credit))
             }
             day = next
         }
@@ -76,6 +97,46 @@ final class TreatStore {
 
     func availability(now: Date = .now) -> Availability {
         Availability(balance: balance(now: now), cost: dessertCost)
+    }
+
+    /// Points today will bank at midnight, as things stand right now.
+    func pendingPointsToday(now: Date = .now) -> Int {
+        var pending = isCleanSoFarToday(now: now) ? Self.pointsPerCleanDay : 0
+        if healthConnected {
+            pending += Self.activityPoints(forSteps: todaySteps(now: now))
+        }
+        return pending
+    }
+
+    func todaySteps(now: Date = .now) -> Int {
+        stepsByDay[calendar.startOfDay(for: now)] ?? 0
+    }
+
+    // MARK: - Apple Health
+
+    @MainActor
+    func connectHealth() async {
+        let service = StepSyncService()
+        guard service.isAvailable else { return }
+        do {
+            try await service.requestAuthorization()
+            healthConnected = true
+            persist()
+            await syncSteps()
+        } catch {
+            // Authorization sheet failed or was dismissed; stay disconnected.
+        }
+    }
+
+    @MainActor
+    func syncSteps(now: Date = .now) async {
+        guard healthConnected else { return }
+        let service = StepSyncService()
+        let from = min(installDate, entries.map(\.date).min() ?? installDate)
+        if let steps = try? await service.dailySteps(from: from, calendar: calendar) {
+            stepsByDay = steps
+            persist()
+        }
     }
 
     // MARK: - Recency & streaks
@@ -149,6 +210,8 @@ final class TreatStore {
         var dessertCost: Int
         var installDate: Date
         var entries: [TreatEntry]
+        var healthConnected: Bool?
+        var stepsByDay: [Date: Int]?
     }
 
     private struct LegacyEntry: Codable {
@@ -165,7 +228,13 @@ final class TreatStore {
 
     private func persist() {
         guard !isLoading else { return }
-        let snapshot = Snapshot(dessertCost: dessertCost, installDate: installDate, entries: entries)
+        let snapshot = Snapshot(
+            dessertCost: dessertCost,
+            installDate: installDate,
+            entries: entries,
+            healthConnected: healthConnected,
+            stepsByDay: stepsByDay
+        )
         if let data = try? JSONEncoder().encode(snapshot) {
             UserDefaults.standard.set(data, forKey: Self.storageKey)
         }
@@ -181,6 +250,8 @@ final class TreatStore {
             dessertCost = max(Self.pointsPerCleanDay, snapshot.dessertCost)
             installDate = snapshot.installDate
             entries = snapshot.entries
+            healthConnected = snapshot.healthConnected ?? false
+            stepsByDay = snapshot.stepsByDay ?? [:]
             return
         }
 
