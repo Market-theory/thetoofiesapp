@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Toofies — dessert tracker</title>
+<style>
+  :root {
+    --surface-1: #fcfcfb;      /* chart / card surface */
+    --page: #f9f9f7;           /* page plane */
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #898781;
+    --gridline: #e1e0d9;
+    --baseline: #c3c2b7;
+    --border: rgba(11, 11, 11, 0.10);
+    --series-1: #2a78d6;       /* single data series */
+    --status-good: #0ca30c;
+    --status-warning: #fab219;
+    --status-critical: #d03b3b;
+    --good-text: #006300;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --surface-1: #1a1a19;
+      --page: #0d0d0d;
+      --text-primary: #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted: #898781;
+      --gridline: #2c2c2a;
+      --baseline: #383835;
+      --border: rgba(255, 255, 255, 0.10);
+      --series-1: #3987e5;
+      --good-text: #0ca30c;
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 24px 16px 64px;
+  }
+
+  .app { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+
+  header { display: flex; align-items: center; justify-content: space-between; padding: 4px 4px 8px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand .mark { font-size: 28px; line-height: 1; }
+  .brand h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+  .brand .tagline { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+
+  .card h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: none;
+    margin-bottom: 12px;
+  }
+
+  /* ---- Hero: can I have a treat? ---- */
+  .hero { text-align: center; padding: 28px 20px; }
+  .hero .status-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 600; color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  .hero .figure {
+    font-size: 48px; font-weight: 650; letter-spacing: -0.02em; line-height: 1.1;
+  }
+  .hero .figure.go { color: var(--good-text); }
+  .hero .sub { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
+
+  /* ---- Budget meter ---- */
+  .meter-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+  .meter-row .used { font-size: 15px; font-weight: 600; }
+  .meter-row .cap { font-size: 12px; color: var(--text-muted); }
+  .meter-track { height: 10px; border-radius: 5px; overflow: hidden; background: var(--meter-track, #cde2fb); }
+  .meter-fill { height: 100%; border-radius: 5px; transition: width 0.3s ease; }
+  .meter-note { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
+
+  /* ---- Quick log ---- */
+  .treat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; }
+  .treat-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 12px 8px; border-radius: 12px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-primary); font-family: inherit; font-size: 12px; font-weight: 500;
+    cursor: pointer;
+  }
+  .treat-btn .emoji { font-size: 24px; line-height: 1; }
+  .treat-btn:hover { background: color-mix(in oklab, var(--text-primary) 5%, transparent); }
+  .treat-btn:active { transform: scale(0.97); }
+
+  /* ---- Stat tiles ---- */
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+  .tile .label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+  .tile .value { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; }
+
+  /* ---- Chart ---- */
+  .chart-wrap { position: relative; }
+  .chart-wrap svg { display: block; width: 100%; height: auto; }
+  .chart-tooltip {
+    position: absolute; pointer-events: none; z-index: 2;
+    background: var(--text-primary); color: var(--page);
+    border-radius: 8px; padding: 6px 10px; font-size: 12px; line-height: 1.5;
+    white-space: nowrap; transform: translate(-50%, calc(-100% - 8px));
+    opacity: 0; transition: opacity 0.1s ease;
+  }
+  .chart-tooltip.visible { opacity: 1; }
+  .chart-tooltip .tt-title { font-weight: 600; }
+  .table-toggle { margin-top: 10px; }
+  .table-toggle summary { font-size: 12px; color: var(--text-muted); cursor: pointer; }
+  .table-toggle table { width: 100%; margin-top: 8px; border-collapse: collapse; font-size: 13px; }
+  .table-toggle th, .table-toggle td {
+    text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--gridline);
+    font-variant-numeric: tabular-nums;
+  }
+  .table-toggle th { color: var(--text-secondary); font-weight: 600; }
+
+  /* ---- History ---- */
+  .history { list-style: none; }
+  .history li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 4px; border-bottom: 1px solid var(--gridline);
+  }
+  .history li:last-child { border-bottom: none; }
+  .history .h-emoji { font-size: 20px; }
+  .history .h-name { flex: 1; font-size: 14px; font-weight: 500; }
+  .history .h-time { font-size: 12px; color: var(--text-muted); }
+  .history .h-del {
+    background: transparent; border: none; color: var(--text-muted);
+    font-size: 14px; cursor: pointer; padding: 4px 8px; border-radius: 6px;
+  }
+  .history .h-del:hover { color: var(--status-critical); background: color-mix(in oklab, var(--status-critical) 10%, transparent); }
+  .empty { font-size: 13px; color: var(--text-muted); padding: 8px 4px; }
+
+  /* ---- Settings ---- */
+  .settings-row { display: flex; align-items: center; gap: 12px; }
+  .settings-row label { font-size: 13px; color: var(--text-secondary); flex: 1; }
+  .stepper { display: flex; align-items: center; gap: 10px; }
+  .stepper button {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-primary); font-size: 16px; cursor: pointer;
+  }
+  .stepper button:hover { background: color-mix(in oklab, var(--text-primary) 5%, transparent); }
+  .stepper .count { font-size: 16px; font-weight: 600; min-width: 24px; text-align: center; }
+</style>
+</head>
+<body data-palette="#2a78d6">
+<div class="app">
+  <header>
+    <div class="brand">
+      <span class="mark" aria-hidden="true">🦷</span>
+      <div>
+        <h1>Toofies</h1>
+        <div class="tagline">Know exactly when you can enjoy the sweet things in life</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero: the one number this view leads with -->
+  <section class="card hero" aria-live="polite">
+    <div class="status-label" id="hero-label"></div>
+    <div class="figure" id="hero-figure"></div>
+    <div class="sub" id="hero-sub"></div>
+  </section>
+
+  <!-- Weekly budget meter -->
+  <section class="card">
+    <h2>This week's budget</h2>
+    <div class="meter-row">
+      <span class="used" id="meter-used"></span>
+      <span class="cap" id="meter-cap"></span>
+    </div>
+    <div class="meter-track" id="meter-track" role="meter" aria-label="Weekly treat budget used"
+         aria-valuemin="0"><div class="meter-fill" id="meter-fill"></div></div>
+    <div class="meter-note" id="meter-note"></div>
+  </section>
+
+  <!-- Quick log -->
+  <section class="card">
+    <h2>Had a treat? Log it</h2>
+    <div class="treat-grid" id="treat-grid"></div>
+  </section>
+
+  <!-- Stat tiles -->
+  <section class="tiles">
+    <div class="tile"><div class="label">Treats left this week</div><div class="value" id="tile-left"></div></div>
+    <div class="tile"><div class="label">Daily average, 7 days</div><div class="value" id="tile-avg"></div></div>
+    <div class="tile"><div class="label">Weeks on budget</div><div class="value" id="tile-streak"></div></div>
+  </section>
+
+  <!-- Weekly chart -->
+  <section class="card">
+    <h2>Treats per day, last 7 days</h2>
+    <div class="chart-wrap" id="chart-wrap">
+      <div class="chart-tooltip" id="chart-tooltip"></div>
+    </div>
+    <details class="table-toggle">
+      <summary>View as table</summary>
+      <table id="chart-table">
+        <thead><tr><th scope="col">Day</th><th scope="col">Treats</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </details>
+  </section>
+
+  <!-- History -->
+  <section class="card">
+    <h2>This week's treats</h2>
+    <ul class="history" id="history"></ul>
+  </section>
+
+  <!-- Settings -->
+  <section class="card">
+    <div class="settings-row">
+      <label for="budget-down">Weekly treat budget</label>
+      <div class="stepper">
+        <button id="budget-down" aria-label="Decrease budget">−</button>
+        <span class="count" id="budget-count"></span>
+        <button id="budget-up" aria-label="Increase budget">+</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = 'toofies.v1';
+  var WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+  var TREATS = [
+    { emoji: '🍪', name: 'Cookie' },
+    { emoji: '🍰', name: 'Cake' },
+    { emoji: '🍦', name: 'Ice cream' },
+    { emoji: '🍫', name: 'Chocolate' },
+    { emoji: '🍩', name: 'Donut' },
+    { emoji: '🍬', name: 'Candy' },
+    { emoji: '🥧', name: 'Pie' },
+    { emoji: '🧁', name: 'Cupcake' }
+  ];
+
+  /* ---------- state ---------- */
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed && Array.isArray(parsed.entries) && typeof parsed.budget === 'number') {
+          return parsed;
+        }
+      }
+    } catch (e) { /* corrupted storage falls through to defaults */ }
+    return { budget: 5, entries: [] };
+  }
+
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* storage full/blocked */ }
+  }
+
+  var state = load();
+
+  /* ---------- time helpers (weeks start Monday 00:00 local) ---------- */
+
+  function startOfDay(ts) {
+    var d = new Date(ts);
+    d.setHours(0, 0, 0, 0);
+    return d.getTime();
+  }
+
+  function startOfWeek(ts) {
+    var d = new Date(startOfDay(ts));
+    var dow = (d.getDay() + 6) % 7; // Monday = 0
+    d.setDate(d.getDate() - dow);
+    return d.getTime();
+  }
+
+  function entriesInWeek(weekStart) {
+    return state.entries.filter(function (e) {
+      return e.ts >= weekStart && e.ts < weekStart + WEEK_MS;
+    });
+  }
+
+  function fmtDuration(ms) {
+    var total = Math.max(0, Math.ceil(ms / 1000));
+    var d = Math.floor(total / 86400);
+    var h = Math.floor((total % 86400) / 3600);
+    var m = Math.floor((total % 3600) / 60);
+    var s = total % 60;
+    if (d > 0) return d + 'd ' + h + 'h';
+    if (h > 0) return h + 'h ' + m + 'm';
+    return m + 'm ' + String(s).padStart(2, '0') + 's';
+  }
+
+  function fmtTime(ts) {
+    return new Date(ts).toLocaleString(undefined, {
+      weekday: 'short', hour: 'numeric', minute: '2-digit'
+    });
+  }
+
+  /* ---------- pacing: when is the next treat allowed? ----------
+     Treats are paced evenly across the week: with a budget of B the
+     spacing is 7 days / B after each treat. Budget spent means the
+     next window opens when the week resets on Monday. */
+
+  function nextTreatAt(now) {
+    var weekStart = startOfWeek(now);
+    var week = entriesInWeek(weekStart);
+    if (week.length >= state.budget) return weekStart + WEEK_MS;
+    if (week.length === 0) return now;
+    var lastTs = week.reduce(function (m, e) { return Math.max(m, e.ts); }, 0);
+    var spacing = WEEK_MS / state.budget;
+    return Math.min(lastTs + spacing, weekStart + WEEK_MS);
+  }
+
+  /* ---------- rendering ---------- */
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function renderHero(now) {
+    var next = nextTreatAt(now);
+    var weekStart = startOfWeek(now);
+    var used = entriesInWeek(weekStart).length;
+    var left = Math.max(0, state.budget - used);
+    var label = $('hero-label'), figure = $('hero-figure'), sub = $('hero-sub');
+
+    if (next <= now) {
+      label.textContent = 'Treat check';
+      figure.textContent = 'Go ahead! 🎉';
+      figure.classList.add('go');
+      sub.textContent = left === state.budget
+        ? 'Fresh week — you have ' + left + ' treat' + (left === 1 ? '' : 's') + ' to enjoy.'
+        : left + ' treat' + (left === 1 ? '' : 's') + ' left this week. Savor it.';
+    } else {
+      figure.classList.remove('go');
+      if (used >= state.budget) {
+        label.textContent = 'Budget spent — next treat when the week resets';
+        figure.textContent = fmtDuration(next - now);
+        sub.textContent = 'Your ' + state.budget + '-treat week starts over Monday at midnight.';
+      } else {
+        label.textContent = 'Next treat unlocks in';
+        figure.textContent = fmtDuration(next - now);
+        sub.textContent = left + ' treat' + (left === 1 ? '' : 's') + ' left this week, paced ' +
+          fmtDuration(WEEK_MS / state.budget) + ' apart.';
+      }
+    }
+  }
+
+  function renderMeter(now) {
+    var used = entriesInWeek(startOfWeek(now)).length;
+    var frac = state.budget > 0 ? used / state.budget : 1;
+    var pct = Math.min(100, frac * 100);
+
+    var fill, note, icon;
+    if (frac >= 1)        { fill = 'var(--status-critical)'; icon = '⛔'; note = 'Budget spent — hold out for Monday.'; }
+    else if (frac >= 0.7) { fill = 'var(--status-warning)';  icon = '⚠️'; note = 'Getting close — make the rest count.'; }
+    else                  { fill = 'var(--series-1)';        icon = '✅'; note = 'Comfortably on pace.'; }
+
+    $('meter-used').textContent = used + ' of ' + state.budget + ' treats';
+    $('meter-cap').textContent = 'resets Monday';
+    var track = $('meter-track');
+    track.setAttribute('aria-valuemax', state.budget);
+    track.setAttribute('aria-valuenow', used);
+    /* unfilled track is a lighter step of the fill's own ramp */
+    track.style.background = 'color-mix(in oklab, ' + fill + ' 18%, var(--surface-1))';
+    var fillEl = $('meter-fill');
+    fillEl.style.width = pct + '%';
+    fillEl.style.background = fill;
+    $('meter-note').innerHTML = '<span aria-hidden="true">' + icon + '</span> ' + note;
+  }
+
+  function renderTiles(now) {
+    var used = entriesInWeek(startOfWeek(now)).length;
+    $('tile-left').textContent = Math.max(0, state.budget - used);
+
+    var sevenDaysAgo = startOfDay(now) - 6 * 86400000;
+    var recent = state.entries.filter(function (e) { return e.ts >= sevenDaysAgo; }).length;
+    $('tile-avg').textContent = (recent / 7).toFixed(1);
+
+    /* consecutive completed weeks (walking back from last week) at or under budget */
+    var streak = 0;
+    var ws = startOfWeek(now) - WEEK_MS;
+    var oldest = state.entries.length
+      ? state.entries.reduce(function (m, e) { return Math.min(m, e.ts); }, Infinity)
+      : now;
+    while (ws + WEEK_MS > oldest && entriesInWeek(ws).length <= state.budget) {
+      streak++;
+      ws -= WEEK_MS;
+    }
+    $('tile-streak').textContent = streak;
+  }
+
+  function dayBuckets(now) {
+    var buckets = [];
+    for (var i = 6; i >= 0; i--) {
+      var dayStart = startOfDay(now) - i * 86400000;
+      var items = state.entries.filter(function (e) {
+        return e.ts >= dayStart && e.ts < dayStart + 86400000;
+      });
+      buckets.push({
+        label: i === 0 ? 'Today' : new Date(dayStart).toLocaleDateString(undefined, { weekday: 'short' }),
+        full: new Date(dayStart).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' }),
+        count: items.length,
+        items: items
+      });
+    }
+    return buckets;
+  }
+
+  function renderChart(now) {
+    var buckets = dayBuckets(now);
+    var W = 600, H = 220;
+    var pad = { top: 16, right: 12, bottom: 28, left: 32 };
+    var plotW = W - pad.left - pad.right;
+    var plotH = H - pad.top - pad.bottom;
+
+    var maxCount = Math.max(1, Math.max.apply(null, buckets.map(function (b) { return b.count; })));
+    var tickStep = Math.max(1, Math.ceil(maxCount / 4));
+    var yMax = Math.ceil(maxCount / tickStep) * tickStep;
+    var y = function (v) { return pad.top + plotH - (v / yMax) * plotH; };
+
+    var band = plotW / buckets.length;
+    var barW = Math.min(24, band * 0.5);
+    var maxIdx = buckets.reduce(function (mi, b, i) { return b.count > buckets[mi].count ? i : mi; }, 0);
+
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Bar chart of treats per day over the last 7 days">';
+
+    /* hairline gridlines + clean integer ticks */
+    for (var t = 0; t <= yMax; t += tickStep) {
+      var gy = y(t);
+      svg += '<line x1="' + pad.left + '" x2="' + (W - pad.right) + '" y1="' + gy + '" y2="' + gy +
+             '" stroke="var(--gridline)" stroke-width="1"/>';
+      svg += '<text x="' + (pad.left - 8) + '" y="' + (gy + 4) + '" text-anchor="end" font-size="11" ' +
+             'fill="var(--text-muted)" style="font-variant-numeric:tabular-nums">' + t + '</text>';
+    }
+
+    buckets.forEach(function (b, i) {
+      var cx = pad.left + band * i + band / 2;
+      var bx = cx - barW / 2;
+      var by = y(b.count);
+      var bh = pad.top + plotH - by;
+      if (b.count > 0) {
+        /* 4px rounded data-end, square at the baseline */
+        var r = Math.min(4, bh, barW / 2);
+        svg += '<path d="M' + bx + ' ' + (pad.top + plotH) +
+               ' V' + (by + r) +
+               ' Q' + bx + ' ' + by + ' ' + (bx + r) + ' ' + by +
+               ' H' + (bx + barW - r) +
+               ' Q' + (bx + barW) + ' ' + by + ' ' + (bx + barW) + ' ' + (by + r) +
+               ' V' + (pad.top + plotH) + ' Z" fill="var(--series-1)"/>';
+      }
+      /* selective direct label: only the busiest day */
+      if (i === maxIdx && b.count > 0) {
+        svg += '<text x="' + cx + '" y="' + (by - 6) + '" text-anchor="middle" font-size="11" ' +
+               'font-weight="600" fill="var(--text-secondary)">' + b.count + '</text>';
+      }
+      svg += '<text x="' + cx + '" y="' + (H - 8) + '" text-anchor="middle" font-size="11" ' +
+             'fill="var(--text-muted)"' + (i === 6 ? ' font-weight="600"' : '') + '>' + b.label + '</text>';
+      /* hover hit target: the full band, larger than the mark */
+      svg += '<rect class="hit" data-i="' + i + '" x="' + (pad.left + band * i) + '" y="' + pad.top +
+             '" width="' + band + '" height="' + plotH + '" fill="transparent"/>';
+    });
+
+    /* baseline */
+    svg += '<line x1="' + pad.left + '" x2="' + (W - pad.right) + '" y1="' + (pad.top + plotH) +
+           '" y2="' + (pad.top + plotH) + '" stroke="var(--baseline)" stroke-width="1"/>';
+    svg += '</svg>';
+
+    var wrap = $('chart-wrap');
+    var tooltip = $('chart-tooltip');
+    wrap.querySelectorAll('svg').forEach(function (el) { el.remove(); });
+    wrap.insertAdjacentHTML('beforeend', svg);
+
+    wrap.querySelectorAll('.hit').forEach(function (hit) {
+      hit.addEventListener('mouseenter', function () {
+        var b = buckets[+hit.dataset.i];
+        var names = b.items.map(function (e) { return e.emoji + ' ' + e.name; }).join(', ');
+        tooltip.innerHTML = '<div class="tt-title">' + b.full + '</div>' +
+          b.count + ' treat' + (b.count === 1 ? '' : 's') + (names ? '<br>' + names : '');
+        tooltip.classList.add('visible');
+      });
+      hit.addEventListener('mousemove', function (ev) {
+        var r = wrap.getBoundingClientRect();
+        tooltip.style.left = (ev.clientX - r.left) + 'px';
+        tooltip.style.top = (ev.clientY - r.top) + 'px';
+      });
+      hit.addEventListener('mouseleave', function () { tooltip.classList.remove('visible'); });
+    });
+
+    /* table view of the same data */
+    var tbody = $('chart-table').querySelector('tbody');
+    tbody.innerHTML = buckets.map(function (b) {
+      return '<tr><td>' + b.full + '</td><td>' + b.count + '</td></tr>';
+    }).join('');
+  }
+
+  function renderHistory(now) {
+    var week = entriesInWeek(startOfWeek(now)).slice().sort(function (a, b) { return b.ts - a.ts; });
+    var list = $('history');
+    if (week.length === 0) {
+      list.innerHTML = '<li class="empty">Nothing yet — a clean slate. 🦷✨</li>';
+      return;
+    }
+    list.innerHTML = week.map(function (e) {
+      return '<li>' +
+        '<span class="h-emoji" aria-hidden="true">' + e.emoji + '</span>' +
+        '<span class="h-name">' + e.name + '</span>' +
+        '<span class="h-time">' + fmtTime(e.ts) + '</span>' +
+        '<button class="h-del" data-id="' + e.id + '" aria-label="Delete ' + e.name + '">✕</button>' +
+        '</li>';
+    }).join('');
+    list.querySelectorAll('.h-del').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        state.entries = state.entries.filter(function (e) { return String(e.id) !== btn.dataset.id; });
+        save();
+        renderAll();
+      });
+    });
+  }
+
+  function renderSettings() {
+    $('budget-count').textContent = state.budget;
+  }
+
+  function renderAll() {
+    var now = Date.now();
+    renderHero(now);
+    renderMeter(now);
+    renderTiles(now);
+    renderChart(now);
+    renderHistory(now);
+    renderSettings();
+  }
+
+  /* ---------- wiring ---------- */
+
+  var grid = $('treat-grid');
+  TREATS.forEach(function (t) {
+    var btn = document.createElement('button');
+    btn.className = 'treat-btn';
+    btn.innerHTML = '<span class="emoji" aria-hidden="true">' + t.emoji + '</span>' + t.name;
+    btn.addEventListener('click', function () {
+      state.entries.push({ id: Date.now() + ':' + Math.random().toString(36).slice(2, 8), emoji: t.emoji, name: t.name, ts: Date.now() });
+      save();
+      renderAll();
+    });
+    grid.appendChild(btn);
+  });
+
+  $('budget-down').addEventListener('click', function () {
+    if (state.budget > 1) { state.budget--; save(); renderAll(); }
+  });
+  $('budget-up').addEventListener('click', function () {
+    if (state.budget < 50) { state.budget++; save(); renderAll(); }
+  });
+
+  renderAll();
+  /* live countdown */
+  setInterval(function () {
+    var now = Date.now();
+    renderHero(now);
+    renderMeter(now);
+  }, 1000);
+})();
+</script>
+</body>
+</html>
