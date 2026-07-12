@@ -6,17 +6,26 @@ struct StatTilesRow: View {
     var body: some View {
         HStack(spacing: 8) {
             StatTile(
-                label: "Treats left this week",
-                value: "\(store.remainingThisWeek())"
+                label: "Points balance",
+                value: "\(store.balance())"
             )
             StatTile(
-                label: "Daily average, 7 days",
-                value: store.dailyAverage().formatted(.number.precision(.fractionLength(1)))
+                label: "Last dessert",
+                value: lastDessertText
             )
             StatTile(
-                label: "Weeks on budget",
-                value: "\(store.weeksOnBudgetStreak())"
+                label: "Clean-day streak",
+                value: "\(store.cleanStreak())"
             )
+        }
+    }
+
+    private var lastDessertText: String {
+        guard let days = store.daysSinceLastDessert() else { return "—" }
+        switch days {
+        case 0: return "Today"
+        case 1: return "1d ago"
+        default: return "\(days)d ago"
         }
     }
 }

@@ -4,24 +4,30 @@ struct HistoryCard: View {
     @Environment(TreatStore.self) private var store
 
     var body: some View {
-        let week = store.entries(in: store.currentWeek(containing: .now))
-            .sorted { $0.date > $1.date }
+        let recent = Array(store.entries.sorted { $0.date > $1.date }.prefix(10))
 
-        Card(title: "This week's treats") {
-            if week.isEmpty {
-                Text("Nothing yet — a clean slate. 🦷✨")
+        Card(title: "Recent desserts") {
+            if recent.isEmpty {
+                Text("Nothing yet — every day you wait banks +\(TreatStore.pointsPerCleanDay) pts. 🦷✨")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             } else {
                 VStack(spacing: 0) {
-                    ForEach(week) { entry in
+                    ForEach(recent) { entry in
                         HStack(spacing: 10) {
                             Text(entry.emoji)
                                 .font(.title3)
-                            Text(entry.name)
-                                .font(.subheadline.weight(.medium))
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(entry.name)
+                                    .font(.subheadline.weight(.medium))
+                                if entry.pointsSpent > 0 {
+                                    Text("−\(entry.pointsSpent) pts")
+                                        .font(.caption2)
+                                        .foregroundStyle(.tertiary)
+                                }
+                            }
                             Spacer()
-                            Text(entry.date.formatted(.dateTime.weekday(.abbreviated).hour().minute()))
+                            Text(entry.date.formatted(.dateTime.month(.abbreviated).day().hour().minute()))
                                 .font(.caption)
                                 .foregroundStyle(.tertiary)
                             Button {
@@ -39,7 +45,7 @@ struct HistoryCard: View {
                         }
                         .padding(.vertical, 10)
 
-                        if entry.id != week.last?.id {
+                        if entry.id != recent.last?.id {
                             Divider()
                         }
                     }

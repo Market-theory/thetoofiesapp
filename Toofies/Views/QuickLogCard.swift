@@ -4,7 +4,7 @@ struct QuickLogCard: View {
     @Environment(TreatStore.self) private var store
 
     var body: some View {
-        Card(title: "Had a treat? Log it") {
+        Card(title: "Had a dessert? Log it") {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 88), spacing: 8)], spacing: 8) {
                 ForEach(TreatKind.allCases) { kind in
                     Button {

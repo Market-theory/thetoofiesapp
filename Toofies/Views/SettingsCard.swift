@@ -7,15 +7,19 @@ struct SettingsCard: View {
         @Bindable var store = store
 
         Card {
-            Stepper(value: $store.budget, in: 1...50) {
+            Stepper(value: $store.dessertCost, in: 10...100, step: 5) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Weekly treat budget")
+                    Text("Dessert cost")
                         .font(.subheadline)
-                    Text("\(store.budget) treats, one unlocks every \(Format.duration(store.treatSpacing))")
+                    Text("\(store.dessertCost) pts ≈ \(cleanDays) clean day\(cleanDays == 1 ? "" : "s") per dessert")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
         }
+    }
+
+    private var cleanDays: Int {
+        Int((Double(store.dessertCost) / Double(TreatStore.pointsPerCleanDay)).rounded(.up))
     }
 }

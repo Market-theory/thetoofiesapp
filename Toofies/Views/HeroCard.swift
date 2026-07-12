@@ -1,34 +1,33 @@
 import SwiftUI
 
-/// The one answer the app leads with: "Go ahead!" or a live countdown to the
-/// moment the next treat unlocks.
+/// The answer the app leads with: "Treat yourself!" when the balance covers a
+/// dessert, otherwise how many points (≈ clean days) stand between you and
+/// the next one — plus a live countdown to tonight's +10 credit.
 struct HeroCard: View {
     @Environment(TreatStore.self) private var store
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 1)) { context in
             let now = context.date
-            let next = store.nextTreatDate(now: now)
-            let used = store.usedThisWeek(now: now)
-            let left = store.remainingThisWeek(now: now)
-            let unlocked = next <= now
+            let avail = store.availability(now: now)
+            let cleanToday = store.isCleanSoFarToday(now: now)
 
             VStack(spacing: 8) {
-                Text(label(unlocked: unlocked, used: used))
+                Text(avail.affordable ? "Treat check" : "Next dessert")
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.secondary)
 
-                if unlocked {
-                    Text("Go ahead! 🎉")
+                if avail.affordable {
+                    Text("Treat yourself! 🎉")
                         .font(.system(size: 42, weight: .semibold, design: .rounded))
                         .foregroundStyle(Color.goodText)
                 } else {
-                    Text(Format.countdown(from: now, to: next))
+                    Text("\(avail.pointsNeeded) pts to go")
                         .font(.system(size: 42, weight: .semibold, design: .rounded))
                         .monospacedDigit()
                 }
 
-                Text(subtitle(unlocked: unlocked, used: used, left: left))
+                Text(subtitle(avail: avail, cleanToday: cleanToday, now: now))
                     .font(.footnote)
                     .foregroundStyle(.tertiary)
                     .multilineTextAlignment(.center)
@@ -43,22 +42,16 @@ struct HeroCard: View {
         }
     }
 
-    private func label(unlocked: Bool, used: Int) -> String {
-        if unlocked { return "Treat check" }
-        if used >= store.budget { return "Budget spent — next treat when the week resets" }
-        return "Next treat unlocks in"
-    }
-
-    private func subtitle(unlocked: Bool, used: Int, left: Int) -> String {
-        let treats = { (n: Int) in "\(n) treat\(n == 1 ? "" : "s")" }
-        if unlocked {
-            return used == 0
-                ? "Fresh week — you have \(treats(left)) to enjoy."
-                : "\(treats(left)) left this week. Savor it."
+    private func subtitle(avail: TreatStore.Availability, cleanToday: Bool, now: Date) -> String {
+        if avail.affordable {
+            let desserts = "\(avail.bankedDesserts) dessert\(avail.bankedDesserts == 1 ? "" : "s")"
+            return "\(avail.balance) points banked — enough for \(desserts). You've earned it."
         }
-        if used >= store.budget {
-            return "Your \(store.budget)-treat week starts over Monday at midnight."
+        let days = "\(avail.cleanDaysNeeded) clean day\(avail.cleanDaysNeeded == 1 ? "" : "s")"
+        if cleanToday {
+            let untilMidnight = Format.countdown(from: now, to: store.nextMidnight(after: now))
+            return "About \(days) away — today banks +\(TreatStore.pointsPerCleanDay) pts at midnight (in \(untilMidnight))."
         }
-        return "\(treats(left)) left this week, paced \(Format.duration(store.treatSpacing)) apart."
+        return "Earning resumes tomorrow — about \(days) to go."
     }
 }

@@ -37,12 +37,20 @@ struct TreatEntry: Identifiable, Codable, Equatable {
     let emoji: String
     let name: String
     let date: Date
+    /// The dessert's price in points at the moment it was logged (0 for
+    /// entries migrated from the pre-economy prototype).
+    let pointsSpent: Int
 
-    init(kind: TreatKind, date: Date = .now) {
-        self.id = UUID()
-        self.emoji = kind.emoji
-        self.name = kind.name
+    init(kind: TreatKind, date: Date = .now, pointsSpent: Int) {
+        self.init(id: UUID(), emoji: kind.emoji, name: kind.name, date: date, pointsSpent: pointsSpent)
+    }
+
+    init(id: UUID, emoji: String, name: String, date: Date, pointsSpent: Int) {
+        self.id = id
+        self.emoji = emoji
+        self.name = name
         self.date = date
+        self.pointsSpent = pointsSpent
     }
 }
 

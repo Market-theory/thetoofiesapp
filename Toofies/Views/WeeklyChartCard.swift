@@ -11,11 +11,11 @@ struct WeeklyChartCard: View {
         let tickStep = max(1, Int((Double(maxCount) / 4).rounded(.up)))
         let yMax = Int((Double(maxCount) / Double(tickStep)).rounded(.up)) * tickStep
 
-        Card(title: "Treats per day, last 7 days") {
+        Card(title: "Desserts per day, last 7 days") {
             Chart(days) { day in
                 BarMark(
                     x: .value("Day", day.label),
-                    y: .value("Treats", day.count),
+                    y: .value("Desserts", day.count),
                     width: .fixed(24)
                 )
                 .foregroundStyle(Color.series)
@@ -39,7 +39,7 @@ struct WeeklyChartCard: View {
             if let selectedLabel,
                let day = days.first(where: { $0.label == selectedLabel }) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("\(day.fullLabel) — \(day.count) treat\(day.count == 1 ? "" : "s")")
+                    Text("\(day.fullLabel) — \(day.count) dessert\(day.count == 1 ? "" : "s")")
                         .font(.caption.weight(.semibold))
                     if !day.entries.isEmpty {
                         Text(day.entries.map { "\($0.emoji) \($0.name)" }.joined(separator: ", "))

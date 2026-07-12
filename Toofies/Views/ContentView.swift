@@ -8,7 +8,7 @@ struct ContentView: View {
             VStack(spacing: 16) {
                 header
                 HeroCard()
-                BudgetMeterCard()
+                PointsMeterCard()
                 QuickLogCard()
                 StatTilesRow()
                 WeeklyChartCard()
