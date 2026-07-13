@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Strava activity screen — anatomy (reference wireframe)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, sans-serif;
+    background: #eceae6; color: #2b2b2b; padding: 32px; display: flex; justify-content: center;
+  }
+  .wrap { display: flex; gap: 28px; align-items: flex-start; max-width: 1000px; }
+  .banner { position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+            font-size: 12px; color: #8a8a8a; }
+
+  /* wireframe phone */
+  .phone { width: 320px; flex: 0 0 320px; background: #fff; border-radius: 34px;
+           box-shadow: 0 20px 50px -18px rgba(0,0,0,.28), 0 0 0 8px #1a1a1a; overflow: hidden; }
+  .sec { border-bottom: 2px dashed #d6d3cd; padding: 16px; position: relative; }
+  .tag { position: absolute; top: 8px; right: 10px; font-size: 9px; font-weight: 700;
+         color: #b9b5ad; letter-spacing: .04em; }
+
+  .map { height: 150px; background:
+         repeating-linear-gradient(45deg,#e3e0da,#e3e0da 10px,#dcd8d1 10px,#dcd8d1 20px);
+         border-radius: 10px; display: grid; place-items: center; color: #9a958c; font-size: 12px; }
+  .hero { display: flex; gap: 8px; margin-top: 14px; }
+  .hero .m { flex: 1; text-align: center; }
+  .hero .n { font-size: 24px; font-weight: 800; color: #222; }
+  .hero .l { font-size: 10px; color: #9a958c; text-transform: uppercase; letter-spacing: .05em; }
+
+  .grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+  .grid .c { background: #f4f2ee; border-radius: 8px; padding: 10px; text-align: center; }
+  .grid .c .n { font-size: 15px; font-weight: 700; color: #3a3a3a; }
+  .grid .c .l { font-size: 9px; color: #a29d94; text-transform: uppercase; }
+
+  .chart { height: 84px; display: flex; align-items: flex-end; gap: 3px; }
+  .chart i { flex: 1; border-radius: 2px 2px 0 0; }
+
+  .split { display: flex; justify-content: space-between; font-size: 11px; color: #7d7d7d;
+           padding: 6px 0; border-bottom: 1px solid #f0eee9; }
+  .social { display: flex; gap: 14px; color: #b0aca3; font-size: 20px; }
+
+  /* callouts */
+  .notes { flex: 1; padding-top: 8px; }
+  .notes h2 { font-size: 15px; margin-bottom: 4px; }
+  .notes .sub { font-size: 12px; color: #8a867e; margin-bottom: 18px; }
+  .note { margin-bottom: 16px; padding-left: 14px; border-left: 3px solid #c9c4bb; }
+  .note b { font-size: 13px; }
+  .note p { font-size: 12px; color: #6f6b63; line-height: 1.45; margin-top: 2px; }
+  .num { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%;
+         background: #2b2b2b; color: #fff; font-size: 11px; font-weight: 700; margin-right: 6px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="phone">
+    <div class="sec"><span class="tag">① HERO</span>
+      <div class="map">route map</div>
+      <div class="hero">
+        <div class="m"><div class="n">28:14</div><div class="l">Time</div></div>
+        <div class="m"><div class="n">3.2 mi</div><div class="l">Distance</div></div>
+        <div class="m"><div class="n">8:49</div><div class="l">Pace</div></div>
+      </div>
+    </div>
+    <div class="sec"><span class="tag">② STAT GRID</span>
+      <div class="grid">
+        <div class="c"><div class="n">312 ft</div><div class="l">Elev</div></div>
+        <div class="c"><div class="n">168</div><div class="l">Cadence</div></div>
+        <div class="c"><div class="n">241</div><div class="l">Cal</div></div>
+        <div class="c"><div class="n">148</div><div class="l">Avg HR</div></div>
+        <div class="c"><div class="n">172</div><div class="l">Max HR</div></div>
+        <div class="c"><div class="n">8:31</div><div class="l">GAP</div></div>
+      </div>
+    </div>
+    <div class="sec"><span class="tag">③ PACE × ELEVATION</span>
+      <div class="chart" id="chart"></div>
+    </div>
+    <div class="sec"><span class="tag">④ SPLITS</span>
+      <div class="split"><span>Mile 1</span><span>8:42</span></div>
+      <div class="split"><span>Mile 2</span><span>8:55</span></div>
+      <div class="split"><span>Mile 3</span><span>8:49</span></div>
+    </div>
+    <div class="sec" style="border-bottom:none"><span class="tag">⑤ SOCIAL</span>
+      <div class="social">👍 &nbsp; 💬 &nbsp; 📷</div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <h2>Strava activity screen — anatomy</h2>
+    <div class="sub">Reconstructed from public descriptions (not a screenshot). The point is the <b>structure</b>, not the exact pixels.</div>
+    <div class="note"><b><span class="num">1</span>Hero: 3 headline metrics</b>
+      <p>Map + the three numbers that matter — time, distance, pace — big and first. Same three on the Lock Screen. → Toofies: <b>steps today + points banked</b>.</p></div>
+    <div class="note"><b><span class="num">2</span>Recessive stat grid</b>
+      <p>Everything else (elevation, HR, cadence…) shrinks into small tiles. Hierarchy: 2–3 numbers dominate. → Toofies: quest progress + streak.</p></div>
+    <div class="note"><b><span class="num">3</span>Effort visualized over time</b>
+      <p>Pace overlaid on elevation — the run becomes a story, not a total. → Toofies: <b>steps over the week</b>, accumulating toward the next treat.</p></div>
+    <div class="note"><b><span class="num">4</span>Progressive disclosure</b>
+      <p>Splits and detail live below the fold for those who want them; the top stays clean.</p></div>
+    <div class="note"><b><span class="num">5</span>Completion is an event</b>
+      <p>Finishing is a moment (+ social kudos). → Toofies: the <b>"quest complete / activity banked"</b> celebration.</p></div>
+    <div class="note" style="border-color:#d98"><b>⚠ Anti-pattern</b>
+      <p>Their 2025 redesign was criticized for cramming map+stats+photos together. Keep Toofies' activity view <b>focused</b>.</p></div>
+  </div>
+</div>
+<script>
+  const cols = ['#4a4a4a','#5a5a5a','#3a3a3a','#6a6a6a','#2e2e2e','#555','#444','#666','#3a3a3a','#5a5a5a','#404040','#606060','#333','#6a6a6a','#4a4a4a','#585858','#3e3e3e','#646464'];
+  const h = [40,55,72,60,48,80,66,52,44,70,84,58,46,62,76,50,42,68];
+  document.getElementById('chart').innerHTML = h.map((v,i)=>`<i style="height:${v}%;background:${cols[i]}"></i>`).join('');
+</script>
+</body>
+</html>
