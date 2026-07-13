@@ -26,14 +26,23 @@ The ideation transcript held an unresolved tension:
 The market research says the *anti-restriction, playful* framing is the
 defensible, growing niche. These personas mostly align on tone but differ on
 whether the hook is "control/peace-of-mind" vs "guilt-free enjoyment."
-**Rec (🟡):** lead with guilt-free enjoyment + peace-of-mind (earn your
-treats), health-adjacent not health-clinical. **Needs your ratify.**
+**Founder steer (2026-07-13):** *"mostly this app is about being more careful
+about consumption"* — with social sharing of favorite desserts/locations as a
+**secondary** layer. This settles the core: the primary job is **mindful/
+careful consumption** (the tracker + recency), not discovery. **Rec (🟡):**
+positioning = careful, guilt-free consumption; sharing secondary. **Note the
+tension the behavioral council flagged:** "careful about consumption" sits
+closest to the restriction/ED line — so this framing is exactly the one that
+needs the behavioral safeguards (see COUNCIL-2026-07-13.md). **Confirm to ratify.**
 
 ### D2 · What v1 *is* — scope boundary 🔴  — *blocks everything downstream*
 The minimum lovable v1. Candidate line: solo, on-device dessert + activity
-points tracker with the earn/spend economy, streak, quest, and the recency
-answer — **no accounts, no social, no paywall.** Social/sharing = v2.
-**Rec (🟡):** yes to that boundary. **Needs ratify.**
+tracker centered on the **careful-consumption / recency** job, with the
+earn/spend economy as an **opt-in experiment** (per the council, not the
+foundation), streak, and quest — **no accounts, no social, no paywall.**
+Social sharing of favorite desserts/locations = a deliberate later layer (D22).
+**Rec (🟡):** yes to that boundary; validate the economy with real users before
+making it core. **Needs ratify.**
 
 ### D3 · Ambition & success definition for v1 🔴
 Is v1: (a) a personal tool for you, (b) a soft TestFlight/beta launch, or (c) a
@@ -166,12 +175,13 @@ recommendations. Context you need:
 - Lean starting point if pursued: one or two cities, curated, before "all of
   the US." Prove the discovery loop small before the data commitment.
 
-### D26 · Geographic beachhead / GTM strategy 🔴 — *the smart way to make D25 tractable*
-Founder insight: launch in a dessert-dense market first (Orlando / Disney) — huge
-concentration of dessert spots + high-intent tourists — then expand city by
-city (Uber/DoorDash marketplace playbook), instead of a national cold start.
-Solves D25's cold-start + freshness problem. Full rationale in `VISION.md`.
-**Rec (🟡):** if the discovery vision is pursued, this is the right sequencing.
+### D26 · Geographic "start local" GTM 🔴 — *the smart way to make D25 tractable*
+If discovery is pursued, start in one dessert-rich market and expand city by
+city (marketplace playbook) rather than a national cold start — solves D25's
+cold-start + freshness problem. **Orlando is simply the founder's home market**
+and a genuinely dessert-dense, adventure-worthy one (Disney was only an example
+of that density, not a strategy — see R7). **Rec (🟡):** start-local sequencing
+if/when discovery is built.
 
 **Cross-impact:** D22–D24 strongly tilt **D1** toward the social/fun persona and
 would flip **D4→accounts / D5→backend**. The key question they force is **D2**:
@@ -212,10 +222,12 @@ reckoned with, not assumed away.
   building.
 - **R6 · Privacy-as-a-feature vs the social/location vision directly conflict**
   (D4/D23). You cannot fully have both; a deliberate tradeoff is required.
-- **R7 · Beachhead caveat (previously oversold).** Orlando/Disney is dessert-
-  dense, but Disney is a walled garden with real IP/legal sensitivity around
-  commercial use of its name, venues, and data. The "finite curatable set"
-  cuts both ways.
+- **R7 · Disney — CLOSED. It was only an illustrative example, never a
+  strategy** (clarified 2026-07-13: *"This isn't about Disney at all — I live in
+  Orlando and am referencing them as a place people go to try new desserts and
+  go on adventures worth sharing."*). Own branding, no Disney IP; a Disney venue
+  would at most appear as a factual location. No material legal risk. Disney is
+  dropped from the analysis.
 
 ## How we'll work through this
 1. Settle **Tier 0** first (D1–D3) — it disambiguates most of the rest.
