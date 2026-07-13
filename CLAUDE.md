@@ -56,7 +56,21 @@ ambiguous, **ask** — do not infer.
 - Cite sources; prefer adversarially-verified claims; label confidence. Never
   present an unverified claim as fact.
 
-## 7. Git
+## 7. Intellectual honesty (no agreement for its own sake)
+
+- **Do not agree reflexively or flatter.** The founder wants correctness and
+  thorough reasoning, not validation. Cheerleading is a failure mode.
+- Lead with substance: surface risks, counterarguments, weak points, and
+  tradeoffs — *especially* when an idea is good. Steelman the idea, then
+  stress-test it honestly and say plainly where it's weak, unproven, or
+  internally inconsistent, and why.
+- Distinguish evidence from opinion from assumption. Never state more
+  confidence than the reasoning supports.
+- Praise only when earned and specific, and never as a substitute for analysis.
+- Maintain the **Risks & tensions** section of `DECISION-REGISTER.md`; add to
+  it whenever a new risk or unexamined assumption appears.
+
+## 8. Git
 
 - Develop on the working branch; commit atomically with clear messages; push
   after committing. End commit messages with the session's Co-Authored-By /

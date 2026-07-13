@@ -187,6 +187,36 @@ bigger? That sequencing is yours to decide — see the question below.
 
 ---
 
+## Risks, tensions & hard questions (maintained continuously)
+
+Honest challenges to the plan so far — not blockers, but things that must be
+reckoned with, not assumed away.
+
+- **R1 · Scope creep is the live risk.** In one session the vision went from a
+  solo tracker to a national social dessert-discovery platform, with no
+  convergence and nothing validated. Enthusiastic capture ≠ progress; the hard
+  discipline (pick a wedge, ship it, learn) is not yet in place.
+- **R2 · "Tracker is a wedge into discovery" is an unproven assumption.** The
+  moderation-minded tracker user and the indulgence-minded discovery user may
+  be different people, or even in tension. One funnel is assumed, not shown.
+- **R3 · Discovery has strong incumbents.** Google Maps, Yelp, Instagram,
+  TripAdvisor, and Disney's own app already do dessert discovery. A directory
+  by itself is a commodity, not a moat — only curation/community/taste could
+  be defensible. This must be faced honestly.
+- **R4 · Data sourcing could sink the directory.** Places-API terms typically
+  forbid building/redistributing your own permanent dataset; freshness is an
+  ongoing cost. Make-or-break, not a detail (see D25).
+- **R5 · Nothing is validated with a real user.** All research to date is
+  secondary. There is zero evidence a real person wants *this* earn-your-
+  dessert loop. The highest-value next step may be user validation, not more
+  building.
+- **R6 · Privacy-as-a-feature vs the social/location vision directly conflict**
+  (D4/D23). You cannot fully have both; a deliberate tradeoff is required.
+- **R7 · Beachhead caveat (previously oversold).** Orlando/Disney is dessert-
+  dense, but Disney is a walled garden with real IP/legal sensitivity around
+  commercial use of its name, venues, and data. The "finite curatable set"
+  cuts both ways.
+
 ## How we'll work through this
 1. Settle **Tier 0** first (D1–D3) — it disambiguates most of the rest.
 2. Then Tier 1 (D4–D6) and ratify the built economy (D7–D9).
