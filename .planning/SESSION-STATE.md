@@ -31,18 +31,26 @@ final. It has never been compiled (no Mac/Xcode in the cloud sandbox).
 ## Immediate next task (where we stopped)
 
 **Pulling Strava reference screens from Mobbin for the activity/health UI.**
-- Network was the blocker: environment was on "Trusted" egress, which blocked
-  Browserbase + Mobbin. Founder switched network access to **Full** — now
-  `browserbase.com` and `mobbin.com` ARE reachable from the sandbox (verified).
-- **Method that should now work:** start a Browserbase session (MCP:
-  `mcp__…browserbase…__start`), get its `cdpUrl`, then connect local Playwright
-  over CDP (`chromium.connectOverCDP(cdpUrl)`) to screenshot Mobbin pages —
-  the MCP has no screenshot tool, so the CDP bridge is how we capture pixels.
-- Remaining hurdle: Mobbin login-gates app screens; the cloud browser starts
-  signed out, so it may need the founder's Mobbin login to see gated screens.
-- Target URL: the Strava iOS app screens on Mobbin (activity detail stats,
-  post-activity summary, weekly progress). Goal: map Strava's stat-tile
-  hierarchy + effort visualization onto Toofies' activity screens.
+- Founder set network access to **Full**. Simple requests now work (`curl`
+  reaches mobbin.com = 200). BUT **all browser pixel-capture paths are blocked
+  by this environment's TLS-terminating proxy**, verified 2026-07-13:
+  - Browserbase MCP (`navigate`/`extract`) works (routes via Anthropic), but
+    has NO screenshot tool, and `extract` only reads DOM text — Mobbin screens
+    are images, so it returns generic page text, not the Strava designs.
+  - Playwright→Browserbase CDP bridge: the proxy won't carry the WebSocket
+    (ECONNRESET); direct connect is egress-blocked.
+  - Local Chromium in the sandbox via the proxy: `ERR_CONNECTION_RESET` — the
+    proxy carries curl but resets browser traffic.
+  - Plus Mobbin **login-gates** the screens; a signed-out browser sees a
+    generic view regardless.
+- **Conclusion: capturing Mobbin/Strava pixels is NOT possible from this
+  cloud environment.** Reliable path = founder screenshots on their Mac (where
+  they're logged into Mobbin) and drops the images into chat for analysis.
+- We DO already have Strava's activity-screen *patterns* from public sources
+  (see the chat / research): hero + big headline metrics, recessive secondary
+  stat grid, splits, pace-over-elevation chart, 3-metric Lock Screen, and the
+  "don't overcrowd" lesson. The activity-screen design can proceed on those
+  without the Mobbin pixels.
 
 ## Highest-value next steps (only the founder can do)
 
