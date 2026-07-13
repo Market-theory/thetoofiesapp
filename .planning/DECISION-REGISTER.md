@@ -14,6 +14,38 @@ needed to decide well — no decision is "skipped past."
 
 ---
 
+## 🟢 RATIFIED 2026-07-13 ("agreed on all fronts")
+
+The founder ratified the post-council direction. Now locked:
+
+- **D1 · Positioning:** the app is **primarily about careful, guilt-free
+  consumption** (the tracker + recency answer). Social sharing of favorite
+  desserts/locations is a **secondary** layer. Never a diet/calorie/weight app.
+- **D2 · v1 core:** a **solo, on-device, careful-consumption + recency
+  tracker**. No accounts, no social, no paywall in v1.
+- **D4 (v1):** **on-device only** for v1 ("Data Not Collected").
+- **D7–D9 · Points economy = an OPT-IN EXPERIMENT, not the foundation.** Must
+  be validated against a no-economy recency tracker with real users before it
+  is ever made core. Ship a "just track recency, no points" mode.
+- **Behavioral safeguards = LOCKED (non-negotiable if any earn/spend food
+  mechanic ships):** never celebrate *abstinence* as the achievement; no
+  "cost/afford/can't afford/spend" language around food; the score must not
+  visibly drop as a penalty when a dessert is enjoyed; don't frame steps as
+  "paying for" dessert; ED-resource signposting. (Mirrored into PRODUCT.md.)
+- **ED-specialist review = REQUIRED GATE** before shipping any earn/spend food
+  mechanic (registered dietitian / eating-disorder specialist).
+
+**⚠️ The current build deviates from this ratified direction** (it leads with
+the economy, the streak celebrates dessert-free "days on plan", and copy uses
+"cost/afford/spend" + steps-as-payment). These are now tracked **reshape
+items** — to be sequenced deliberately, NOT silently rebuilt. See "Next" below.
+
+**Still OPEN (not covered by this ratification):** D3 (indie vs venture
+ambition), D6 (custom dessert list), D10 (monetization), D11–D15 (all design),
+D16 (iPhone-only), D17 (widget in v1), D18 (notifications), D19–D21 (name,
+pricing, launch), D22–D26 (social/location/discovery specifics — deferred to
+later layers).
+
 ## Tier 0 — Product definition (blocks almost everything)
 
 ### D1 · Primary user & positioning 🔴  — *blocks D2, D10, D11–15, D19*

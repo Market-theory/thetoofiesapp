@@ -82,6 +82,25 @@ From the ideation transcript (Minutes AI, 2026-07-12):
 - Peace of mind is the product: "am I safe to do this?" → yes/when.
 - Playful tone (🦷 mascot, celebratory unlocks).
 
+## Behavioral safeguards — LOCKED (ratified 2026-07-13, post-council)
+
+The core ("being more careful about consumption") sits close to the
+restriction/ED line. These are non-negotiable if any earn/spend food mechanic
+ships. Rationale: `.planning/COUNCIL-2026-07-13.md` + MARKET-RESEARCH §2.
+
+- **Never celebrate *abstinence* as the achievement.** Frame streaks/milestones
+  around balance and enjoyment, not dessert-free days as a virtue score.
+- **No "cost / afford / can't afford / spend" language around food**, and the
+  score must **not visibly drop as a penalty** when a dessert is enjoyed.
+- **Do not frame steps/activity as "paying for" dessert** (avoids installing
+  exercise-as-penance).
+- **Ship a "just track recency, no points" mode** — the economy is fully
+  optional; the recency tracker is the safe core.
+- **Signpost eating-disorder resources.**
+- **Required gate:** a registered-dietitian / ED-specialist review of the
+  mechanic before shipping any earn/spend food loop.
+- The economy is an **opt-in experiment to validate**, not the assumed core.
+
 ## Positioning
 
 A health/food app for dessert lovers: responsible indulgence via an
