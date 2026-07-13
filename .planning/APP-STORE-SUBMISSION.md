@@ -46,15 +46,17 @@ memorized — work top to bottom when you're ready to ship. Items marked
 One **1024×1024 px** PNG, no alpha, no transparency, sRGB, square (Apple
 rounds the corners). Xcode 16 accepts the single 1024 "single size" slot in
 the asset catalog (`Assets.xcassets/AppIcon`) and generates the rest.
-- Design: tooth + dessert motif on the amber brand (`#D97706`); must read at
-  small sizes; no text; safe margins.
+- Design direction is **undecided** (see `DESIGN-SPEC.md`) — the icon follows
+  from the brand decision, so it must read at small sizes, have no text, and
+  keep safe margins, but no colors/motif are chosen yet.
 - *Status: placeholder appiconset exists but is empty — a real 1024 icon is a
-  hard blocker. I can generate a first-draft icon on request.*
+  hard blocker once the brand direction is set.*
 
 ### 2b. Launch screen
 A launch screen is required. We use the generated storyboard
 (`INFOPLIST_KEY_UILaunchScreen_Generation = YES`) — a plain background is
-fine; set it to the warm plane. No splash marketing (HIG forbids splash ads).
+fine; the exact background follows the (undecided) brand direction. No splash
+marketing (HIG forbids splash ads).
 
 ### 2c. Screenshots **[blocker]**
 Uploaded per device size in App Store Connect. As of 2025 Apple requires, at
@@ -81,11 +83,18 @@ Because Toofies uses **HealthKit**, this gets extra scrutiny.
   "Toofies reads your daily step count so being active can earn you dessert
   points." Must be specific and truthful (generic strings get rejected).
 - **[blocker] Privacy Nutrition Label** (App Store Connect → App Privacy):
-  declare what you collect. Toofies stores everything **on-device in
-  UserDefaults** and has no server/account/analytics/tracking, so the honest
-  answer is **"Data Not Collected"** — the strongest possible privacy story,
-  and a selling point. If you later add analytics or accounts, this must
-  change.
+  declare what the app actually collects. **This depends on an architecture
+  decision that is NOT yet made** (see the "Privacy hinges on accounts"
+  callout below). Two very different answers:
+  - **On-device / no-account build (what exists today):** nothing is
+    transmitted — no server, account, analytics, or tracking — so **"Data Not
+    Collected"** is accurate *for this build*, and is the strongest possible
+    privacy posture. This label is only honest as long as the app stays this
+    way.
+  - **Accounts / social / cloud build:** opting in with an email, Sign in with
+    Apple, a profile, friends/feeds, or cloud sync **is** collecting personal
+    data (email, name, user content, identifiers). The label must then list
+    every category, and the obligations in the callout below apply.
 - **[blocker] Privacy Manifest** (`PrivacyInfo.xcprivacy`): Apple now requires
   a privacy manifest declaring "required reason" API usage. We use
   `UserDefaults` (reason code `CA92.1`) and read HealthKit. *Status: not yet
@@ -96,6 +105,33 @@ Because Toofies uses **HealthKit**, this gets extra scrutiny.
   so the review notes (§6) should state it plainly.
 - A **privacy policy URL is required** (even for "collects nothing"). A simple
   hosted page suffices. *Needs writing + hosting.*
+
+### Privacy hinges on one decision: accounts or not? **[UNDECIDED]**
+
+The founder's social/sharing vision ("share your desserts") pulls toward
+accounts; the current app and the privacy-as-a-feature posture pull toward
+staying on-device. This is a genuine fork, not yet decided.
+
+- **Payment info — you almost certainly never hold it.** Apple *requires*
+  digital subscriptions/unlocks to use In-App Purchase. Apple is the merchant
+  of record: they process and hold the card data; you get payouts + anonymized
+  sales reports, never names/addresses/card numbers. So a *paid* Toofies can
+  still be "Data Not Collected." (Only physical goods / real-world services
+  would put you in scope, via Apple Pay/Stripe — not relevant to a dessert
+  tracker.)
+- **Names / emails** — collected only if you add sign-up or Sign in with Apple.
+- **Location / phone / address** — collected only if a feature requests them; a
+  dessert tracker needs none by default. (Location only if we build the
+  "geotag your dessert" idea.)
+- **If you go the accounts route, the obligations are real:** full privacy-label
+  disclosure; a detailed privacy policy; GDPR (EU) + CCPA (California)
+  compliance; **Apple requires in-app account deletion** if you offer account
+  creation; secure backend + breach liability; and App Tracking Transparency
+  if you ever track users across other apps/sites.
+
+**Recommendation to consider (not a decision):** ship v1 on-device / no-account
+(fast, "Data Not Collected," no legal surface), and treat accounts + social as
+a deliberate v2 with its own privacy/compliance workstream. Your call.
 
 ## 4. App Store Connect listing (metadata)
 
