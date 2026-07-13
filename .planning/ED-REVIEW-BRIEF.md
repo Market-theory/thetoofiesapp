@@ -70,3 +70,36 @@ the *structure* may recreate patterns the literature warns about:
 A short note marking each mechanic element **keep / change / cut**, plus any
 copy do's-and-don'ts and screening recommendations. We will treat this as
 binding for the release.
+
+---
+
+## How to find a qualified reviewer (for the founder)
+
+Look for a dietitian or clinician who **specializes in eating disorders** — a
+generalist won't catch the subtle mechanic risks. Credentials that signal the
+right expertise (verify current directories yourself; these are from general
+knowledge as of early 2026):
+
+- **CEDS / CEDS-S** — Certified Eating Disorder Specialist, credentialed by
+  **iaedp** (International Association of Eating Disorders Professionals). Their
+  member directory is the most targeted place to look.
+- **CEDRD** — a registered dietitian with the eating-disorder specialty cert
+  (dietitian-specific; ideal since our mechanic is food-behavior).
+- Members of the **Academy for Eating Disorders (AED)**.
+- The **Academy of Nutrition and Dietetics** "Find a Nutrition Expert" search,
+  filtered for eating-disorder specialty (find an **RD/RDN**, then confirm ED focus).
+- **NEDA** (National Eating Disorders Association) maintains referral resources.
+
+**How to engage:** you're buying a **paid product/design safety review**, not
+therapy — a 1–2 hour consult is standard. Budget a few hundred dollars; some
+specialists offer "app/content review" explicitly. Send them this brief in
+advance. If Toofies grows, consider an ongoing advisor relationship rather than
+a one-time review.
+
+**What good looks like:** they engage with the *specific* mechanic (not just
+"tracking food is risky"), give you concrete keep/change/cut calls, and flag
+things this brief didn't anticipate. If they only give generic caution, find
+someone who'll go deep.
+
+*Note: a specialist review reduces risk and is the right first step; it is not a
+guarantee, and for a shipping consumer product ongoing clinical input is wise.*
