@@ -40,7 +40,7 @@ struct QuestCard: View {
                 .accessibilityValue("\(steps) of \(goal) steps")
 
                 Text(done
-                     ? "Bonus banked at midnight. Toofie's impressed."
+                     ? "Bonus banked at midnight. Your sweet Toofies approve."
                      : "Finish for a +\(TreatStore.questBonusPoints) pt bonus — the goal adapts to your own recent week.")
                     .font(.caption)
                     .foregroundStyle(.tertiary)

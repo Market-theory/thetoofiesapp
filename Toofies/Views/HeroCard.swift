@@ -33,7 +33,7 @@ struct HeroCard: View {
                     .multilineTextAlignment(.center)
 
                 if let milestone = store.streakMilestoneToday(now: now) {
-                    Text("🦷 \(milestone) days on plan — Toofie's proud of you!")
+                    Text("🦷 \(milestone) days on plan — your sweet Toofies are proud of you!")
                         .font(.footnote.weight(.semibold))
                         .foregroundStyle(Color.goodText)
                         .padding(.top, 4)
