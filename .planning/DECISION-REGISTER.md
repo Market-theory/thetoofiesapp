@@ -160,8 +160,18 @@ recommendations. Context you need:
   erodes trust fast. This is an **ongoing cost**, not a one-time load.
 - **Backend, search, geo-indexing, cost** all scale with this. Realistically a
   **v2/v3 pillar or its own product**, not something to bolt onto v1.
+- **Scope now includes restaurants with standout desserts**, not just dessert
+  shops (founder: the best desserts are often *in* restaurants — e.g. Disney).
+  This greatly expands the dataset surface.
 - Lean starting point if pursued: one or two cities, curated, before "all of
   the US." Prove the discovery loop small before the data commitment.
+
+### D26 · Geographic beachhead / GTM strategy 🔴 — *the smart way to make D25 tractable*
+Founder insight: launch in a dessert-dense market first (Orlando / Disney) — huge
+concentration of dessert spots + high-intent tourists — then expand city by
+city (Uber/DoorDash marketplace playbook), instead of a national cold start.
+Solves D25's cold-start + freshness problem. Full rationale in `VISION.md`.
+**Rec (🟡):** if the discovery vision is pursued, this is the right sequencing.
 
 **Cross-impact:** D22–D24 strongly tilt **D1** toward the social/fun persona and
 would flip **D4→accounts / D5→backend**. The key question they force is **D2**:
