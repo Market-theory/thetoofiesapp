@@ -210,7 +210,7 @@ Create the app record in App Store Connect (+ → New App), then fill:
 ---
 
 ### What I can generate for you next (just ask)
-- First-draft **1024 app icon** (tooth + dessert on amber).
+- First-draft **1024 app icon** (once the brand direction is decided).
 - **`PrivacyInfo.xcprivacy`** manifest, ready to drop in.
 - A **privacy policy** page (Markdown/HTML) you can host.
 - The **App Store listing copy** — name, subtitle, description, keywords,
