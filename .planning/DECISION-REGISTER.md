@@ -34,6 +34,19 @@ The founder ratified the post-council direction. Now locked:
   "paying for" dessert; ED-resource signposting. (Mirrored into PRODUCT.md.)
 - **ED-specialist review = REQUIRED GATE** before shipping any earn/spend food
   mechanic (registered dietitian / eating-disorder specialist).
+- **D27 · Tech stack = Expo / React Native (TypeScript)** — founder directive
+  2026-07-13 (`npx create-expo-app toofies`). Supersedes the native SwiftUI
+  build. **Why it's a good call:** Expo runs on web + Expo Go, so the app is
+  **buildable and previewable in the cloud** (and on your phone) with no
+  Mac/Xcode dependency — the exact blocker that stalled the SwiftUI app.
+  **Carries over unchanged:** the points economy, recency, streak, and all
+  behavioral safeguards (stack-agnostic logic), plus PRODUCT/VISION/research/
+  design-library. **Now needs porting/updating:** the SwiftUI code → RN (or
+  archive it as reference); HealthKit → an Expo health module/config plugin;
+  `APP-STORE-SUBMISSION.md` → EAS Build flow; `DEV-SETUP.md` → Expo dev (much
+  simpler — Expo Go, no Xcode for dev). **Open:** archive the SwiftUI app or
+  keep it as reference? (Recommend archive to `native-swiftui/` — it's a
+  reference, not a parallel product.)
 
 **⚠️ The current build deviates from this ratified direction** (it leads with
 the economy, the streak celebrates dessert-free "days on plan", and copy uses
