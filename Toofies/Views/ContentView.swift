@@ -12,6 +12,7 @@ struct ContentView: View {
                 PointsMeterCard()
                 QuickLogCard()
                 ActivityCard()
+                QuestCard()
                 StatTilesRow()
                 WeeklyChartCard()
                 HistoryCard()

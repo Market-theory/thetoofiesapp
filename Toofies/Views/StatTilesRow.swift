@@ -14,8 +14,8 @@ struct StatTilesRow: View {
                 value: lastDessertText
             )
             StatTile(
-                label: "Clean-day streak",
-                value: "\(store.cleanStreak())"
+                label: "Days on plan",
+                value: "\(store.onPlanStreak())"
             )
         }
     }

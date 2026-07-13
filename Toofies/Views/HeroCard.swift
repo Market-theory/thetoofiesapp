@@ -31,6 +31,13 @@ struct HeroCard: View {
                     .font(.footnote)
                     .foregroundStyle(.tertiary)
                     .multilineTextAlignment(.center)
+
+                if let milestone = store.streakMilestoneToday(now: now) {
+                    Text("🦷 \(milestone) days on plan — Toofie's proud of you!")
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(Color.goodText)
+                        .padding(.top, 4)
+                }
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 28)

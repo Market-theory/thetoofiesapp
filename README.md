@@ -11,11 +11,16 @@ always knows how recently you last indulged.
 - **Earn (activity):** connect Apple Health (read-only, opt-in) and every
   **1,500 steps earns +1 pt, up to +15/day** — credited even on dessert days.
   A walk always counts; a 21k-step theme-park day banks +14 on its own.
+- **Earn (daily quest):** walk your quest goal — it adapts to your own recent
+  week — and bank a **+5 pt bonus** at midnight.
 - **Spend:** a dessert costs points (default **30 ≈ 3 clean days**, adjustable
   10–100 in settings). Points roll over — save up for special occasions.
 - **Forgiving by design:** logging is never blocked and there's no debt. A
   dessert you can't afford spends the balance to zero, and earning resumes the
   next clean day. Honest logging always beats punishment.
+- **Streak = days on plan:** clean days and fully-earned dessert days both
+  count; only an over-budget dessert pauses it. 🦷 milestone celebrations at
+  3, 7, 10, 14, 21, 30, 50… days.
 
 ## What's on screen
 
@@ -27,7 +32,9 @@ always knows how recently you last indulged.
   cupcake — with haptics.
 - **Activity** — today's steps and the bonus banking at midnight (once Apple
   Health is connected).
-- **Stats** — points balance, last dessert (recency), clean-day streak.
+- **Today's quest** — the adaptive step goal, progress bar, and +5 bonus
+  state.
+- **Stats** — points balance, last dessert (recency), days on plan.
 - **Last-7-days chart** — desserts per day (Swift Charts); tap a bar to see
   what you ate.
 - **Recent desserts** — the last 10, each with the points it cost.

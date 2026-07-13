@@ -36,12 +36,33 @@ From the ideation transcript (Minutes AI, 2026-07-12):
 - **Spend:** a dessert costs points (default **30 ≈ 3 clean days**,
   adjustable 10–100). Points roll over — no weekly reset; save up for
   occasions.
+- **Earn (daily quest):** a gamified step quest — walk a goal that adapts to
+  your own recent week (105% of your 7-day median, 3k–12k) and bank a
+  **+5 pt bonus** at midnight. Quest rotation/events are the designed answer
+  to gamification's documented 3–4-week novelty decay.
 - **Forgiveness:** logging is never blocked and there is no debt. An
   unaffordable dessert spends the balance to zero; earning resumes
   immediately. Honest logging beats punishment (see MARKET-RESEARCH.md §2).
 - **Recency:** "when did I last have dessert" is a first-class surface —
-  last-dessert date, days ago, clean-day streak ("if you eat enough desserts,
-  you won't remember either").
+  last-dessert date, days ago ("if you eat enough desserts, you won't
+  remember either").
+- **Streak = days on plan:** clean days AND fully-earned dessert days both
+  count — enjoying a dessert you earned is the product promise and must never
+  break the streak. Only an over-budget dessert pauses it (no debt, fresh
+  start tomorrow). Milestones are dense through the first 10 days — the
+  habit-formation window where drop-off risk falls (Duolingo evidence) —
+  with 🦷 mascot celebration moments: 3, 7, 10, 14, 21, 30, 50…
+
+## Gamification decisions (see research/DUOLINGO-GAMIFICATION.md)
+
+| Mechanic | Decision |
+|---|---|
+| Evening streak-saver notification (streak-state-conditional, rotating templates, mascot-cheering never guilt) | v1.1 — with the daily check-in design pass |
+| First-10-days habit ramp + milestone mascot moments | **v1 — implemented** |
+| On-plan streak (out-forgives Duolingo's paid streak freeze by design) | **v1 — implemented** |
+| Adaptive daily step quest (+5 bonus) | **v1 — implemented**; rotation/events v1.1 |
+| Shared streak with a friend (Friend Streak analogue) | v2 — pairs with social dessert moments |
+| Leagues/leaderboards, guilt copy, punitive streak loss | **Rejected** — dark-pattern territory, against framing rules |
 
 ## Decisions from the transcript
 
