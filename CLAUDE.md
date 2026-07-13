@@ -43,6 +43,14 @@ ambiguous, **ask** — do not infer.
 - Design work is gated: invoke design skills (`ui-ux-pro-max`, `design-review`)
   only to produce **options for review**, never to apply a direction. Ground
   iOS specifics in Apple's Human Interface Guidelines.
+- **Code-review gate.** Nontrivial code changes get a **cross-model** second
+  opinion via **OpenAI Codex CLI** (run in the local authenticated
+  environment) before merge — cross-model review catches blind spots a single
+  model shares. Also run the Claude `/code-review` and `/security-review`
+  skills. In environments without Codex (e.g. the remote container), run the
+  Claude review skills + adversarial reviewer agents and **flag that a Codex
+  pass is still owed locally** — do not treat same-family review as a
+  substitute for the cross-model check.
 
 ## 5. Locked framing rules (from PRODUCT.md — do not violate)
 
