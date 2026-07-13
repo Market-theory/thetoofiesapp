@@ -16,3 +16,6 @@ build/
 
 # Claude Code local (per-machine) settings
 .claude/settings.local.json
+
+.mobbin-profile/
+node_modules/

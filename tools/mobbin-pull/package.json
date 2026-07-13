@@ -1,0 +1,12 @@
+{
+  "name": "mobbin-pull",
+  "private": true,
+  "type": "module",
+  "description": "Local Mobbin screen puller for the Toofies design library (run on your Mac).",
+  "scripts": {
+    "postinstall": "playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}
