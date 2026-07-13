@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Toofies — Onboarding (Draft)</title>
+<style>
+  /* ===== Toofies onboarding — DRAFT visual direction: "patisserie counter" =====
+     Pistachio brand · raspberry action/celebration · buttercream surfaces ·
+     cocoa ink. Native SF Rounded stack (matches the eventual SwiftUI app).
+     Every visual here is a proposal to react to, not a decision. */
+  :root {
+    --pistachio: #8FBF6E;
+    --pistachio-deep: #5E9A4F;
+    --berry: #E24A6E;
+    --berry-deep: #C43257;
+    --plane: #F5EEDD;
+    --surface: #FFFDF7;
+    --ink: #43362E;
+    --ink-soft: #93857A;
+    --hairline: rgba(67, 54, 46, 0.10);
+    --shadow: rgba(67, 54, 46, 0.14);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --pistachio: #A6D083;
+      --pistachio-deep: #B9DD9C;
+      --berry: #F0708F;
+      --berry-deep: #F0708F;
+      --plane: #241C17;
+      --surface: #30271F;
+      --ink: #FBF3E6;
+      --ink-soft: #B8A89A;
+      --hairline: rgba(251, 243, 230, 0.12);
+      --shadow: rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body { height: 100%; }
+  body {
+    font-family: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", sans-serif;
+    background:
+      radial-gradient(1200px 600px at 20% -10%, color-mix(in oklab, var(--pistachio) 22%, transparent), transparent),
+      radial-gradient(1000px 500px at 90% 110%, color-mix(in oklab, var(--berry) 16%, transparent), transparent),
+      var(--plane);
+    color: var(--ink);
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+  }
+
+  /* ---- phone frame ---- */
+  .phone {
+    position: relative;
+    width: 360px;
+    max-width: 100%;
+    height: 760px;
+    max-height: 90dvh;
+    background: var(--surface);
+    border-radius: 46px;
+    box-shadow: 0 30px 70px -20px var(--shadow), 0 0 0 10px color-mix(in oklab, var(--ink) 88%, #000), 0 0 0 12px rgba(0,0,0,0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .island {
+    position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+    width: 108px; height: 30px; background: #0d0d0d; border-radius: 16px; z-index: 20;
+  }
+  .draft {
+    position: absolute; top: 16px; right: 14px; z-index: 21;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--berry-deep); background: color-mix(in oklab, var(--berry) 18%, var(--surface));
+    padding: 3px 8px; border-radius: 999px;
+  }
+
+  /* ---- progress dots ---- */
+  .dots { display: flex; gap: 6px; justify-content: center; padding: 54px 0 8px; }
+  .dot { width: 7px; height: 7px; border-radius: 999px; background: var(--hairline); transition: all .35s cubic-bezier(.2,.8,.2,1); }
+  .dot.on { width: 22px; background: var(--pistachio-deep); }
+
+  /* ---- back ---- */
+  .back {
+    position: absolute; top: 50px; left: 16px; z-index: 15;
+    width: 34px; height: 34px; border: none; border-radius: 999px; cursor: pointer;
+    background: color-mix(in oklab, var(--ink) 6%, transparent); color: var(--ink);
+    font-size: 18px; display: grid; place-items: center; opacity: 0; pointer-events: none;
+    transition: opacity .3s;
+  }
+  .back.show { opacity: 1; pointer-events: auto; }
+
+  /* ---- screens ---- */
+  .stage { position: relative; flex: 1; overflow: hidden; }
+  .screen {
+    position: absolute; inset: 0; padding: 8px 28px 28px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    opacity: 0; transform: translateX(40px) scale(.98); pointer-events: none;
+    transition: opacity .45s ease, transform .45s cubic-bezier(.2,.8,.2,1);
+  }
+  .screen.active { opacity: 1; transform: none; pointer-events: auto; }
+  .screen.left { transform: translateX(-40px) scale(.98); }
+
+  .screen .rise { opacity: 0; transform: translateY(14px); }
+  .screen.active .rise { animation: rise .5s cubic-bezier(.2,.8,.2,1) forwards; }
+  .screen.active .rise:nth-child(2) { animation-delay: .06s; }
+  .screen.active .rise:nth-child(3) { animation-delay: .12s; }
+  .screen.active .rise:nth-child(4) { animation-delay: .18s; }
+  .screen.active .rise:nth-child(5) { animation-delay: .24s; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  .spacer { flex: 1; }
+
+  h1 { font-size: 27px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 12px; }
+  h1 .berry { color: var(--berry); }
+  h1 .pist { color: var(--pistachio-deep); }
+  p.body { font-size: 15.5px; line-height: 1.5; color: var(--ink-soft); max-width: 30ch; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pistachio-deep); margin-bottom: 14px; }
+
+  /* ---- buttons ---- */
+  .cta {
+    width: 100%; border: none; cursor: pointer; font-family: inherit;
+    font-size: 17px; font-weight: 700; color: #fff; background: var(--berry);
+    padding: 16px; border-radius: 18px; margin-top: 14px;
+    box-shadow: 0 10px 22px -8px color-mix(in oklab, var(--berry) 70%, transparent);
+    transition: transform .12s ease, filter .2s;
+  }
+  .cta:active { transform: scale(.96); filter: brightness(.97); }
+  .cta.ghost { background: transparent; color: var(--ink-soft); box-shadow: none; font-weight: 600; font-size: 15px; padding: 12px; margin-top: 2px; }
+  .cta.soft { background: color-mix(in oklab, var(--pistachio) 22%, var(--surface)); color: var(--pistachio-deep); box-shadow: none; }
+
+  .foot { width: 100%; padding-top: 6px; }
+
+  /* ---- Toofie character ---- */
+  .toofie { width: 128px; height: 128px; }
+  .toofie svg { width: 100%; height: 100%; overflow: visible; }
+  .bob { animation: bob 3.4s ease-in-out infinite; transform-origin: 50% 90%; }
+  @keyframes bob { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-7px) rotate(-1.5deg); } }
+  .eye { transform-origin: center; animation: blink 4.6s infinite; }
+  @keyframes blink { 0%,92%,100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+  .wave { transform-origin: 78% 60%; animation: wave 2.4s ease-in-out infinite; }
+  @keyframes wave { 0%,100% { transform: rotate(0); } 25% { transform: rotate(16deg); } 50% { transform: rotate(-6deg); } 75% { transform: rotate(12deg); } }
+  .celebrate { animation: pop .6s cubic-bezier(.2,1.4,.4,1) both; }
+  @keyframes pop { 0% { transform: scale(.4); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
+
+  /* ---- recency card (screen 2 & 3) ---- */
+  .rcard {
+    width: 100%; background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: 22px; padding: 22px; box-shadow: 0 12px 30px -18px var(--shadow);
+  }
+  .rcard .r-label { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+  .rcard .r-big { font-size: 40px; font-weight: 800; letter-spacing: -.02em; margin: 6px 0 2px; color: var(--pistachio-deep); }
+  .rcard .r-sub { font-size: 14px; color: var(--ink-soft); }
+
+  /* ---- dessert chips (screen 3 & 6) ---- */
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .chip {
+    font-size: 30px; width: 60px; height: 60px; border-radius: 18px; cursor: pointer;
+    background: var(--surface); border: 2px solid var(--hairline);
+    display: grid; place-items: center; transition: transform .15s, border-color .2s, background .2s;
+  }
+  .chip:active { transform: scale(.9); }
+  .chip.picked { border-color: var(--pistachio); background: color-mix(in oklab, var(--pistachio) 16%, var(--surface)); }
+  .chip.tossed { animation: toss .5s cubic-bezier(.2,.8,.2,1); }
+  @keyframes toss { 0% { transform: scale(1); } 40% { transform: scale(1.35) rotate(-8deg); } 100% { transform: scale(1); } }
+
+  /* ---- confetti ---- */
+  .confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 30; }
+  .confetti i {
+    position: absolute; top: -12px; width: 9px; height: 13px; border-radius: 2px; opacity: 0;
+  }
+
+  .row { display: flex; gap: 10px; align-items: center; width: 100%; text-align: left; padding: 12px 2px; }
+  .row .ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 20px; flex: 0 0 auto;
+             background: color-mix(in oklab, var(--pistachio) 16%, var(--surface)); }
+  .row .rt { font-size: 15px; font-weight: 700; }
+  .row .rd { font-size: 13px; color: var(--ink-soft); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, .bob, .eye, .wave { animation: none !important; transition: opacity .2s ease !important; }
+    .screen { transition: opacity .2s ease !important; transform: none !important; }
+    .screen .rise { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="island"></div>
+  <div class="draft">Draft</div>
+  <button class="back" id="back" aria-label="Back">‹</button>
+  <div class="dots" id="dots"></div>
+  <div class="stage" id="stage"></div>
+  <div class="confetti" id="confetti"></div>
+</div>
+
+<script>
+  // Reusable Toofie character (SVG). `mood` tweaks the mouth; `arm` adds a wave.
+  function toofie(mood, arm) {
+    const mouth = {
+      smile: "M40 74 Q64 92 88 74",
+      grin:  "M38 72 Q64 100 90 72 Q64 84 38 72 Z",
+      calm:  "M44 76 Q64 86 84 76"
+    }[mood || 'smile'];
+    const fill = mood === 'grin' ? 'var(--berry)' : 'none';
+    return `
+    <div class="toofie"><svg viewBox="0 0 128 128" aria-hidden="true">
+      <g class="bob">
+        <path d="M64 12 C36 12 20 30 20 58 C20 84 30 104 40 116 C46 123 54 116 56 106 L60 88 C61 83 67 83 68 88 L72 106 C74 116 82 123 88 116 C98 104 108 84 108 58 C108 30 92 12 64 12 Z"
+              fill="#FFFFFF" stroke="var(--ink)" stroke-width="3.5" stroke-linejoin="round"/>
+        <ellipse cx="46" cy="60" rx="14" ry="11" fill="color-mix(in oklab, var(--berry) 22%, #fff)"/>
+        <ellipse cx="82" cy="60" rx="14" ry="11" fill="color-mix(in oklab, var(--berry) 22%, #fff)"/>
+        <circle class="eye" cx="50" cy="54" r="5.5" fill="var(--ink)"/>
+        <circle class="eye" cx="78" cy="54" r="5.5" fill="var(--ink)"/>
+        <path d="${mouth}" fill="${fill}" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round" fill-opacity=".5"/>
+        ${arm ? '<g class="wave"><rect x="98" y="52" width="20" height="8" rx="4" fill="#fff" stroke="var(--ink)" stroke-width="3"/></g>' : ''}
+      </g>
+    </svg></div>`;
+  }
+
+  const screens = [
+    { // 1 — welcome
+      html: `<div class="spacer"></div>
+        <div class="rise">${toofie('smile', true)}</div>
+        <h1 class="rise">Hi, I'm one of<br>your <span class="pist">Toofies</span> 🦷</h1>
+        <p class="body rise">Toofies helps you enjoy dessert — with a little more awareness and zero guilt.</p>
+        <div class="spacer"></div>
+        <div class="foot rise"><button class="cta" data-next>Let's go</button></div>`
+    },
+    { // 2 — recency core
+      html: `<div class="spacer"></div>
+        <div class="eyebrow rise">The whole idea</div>
+        <h1 class="rise">When did you<br>last have a treat?</h1>
+        <div class="rcard rise" style="margin:10px 0 6px">
+          <div class="r-label">Last treat</div>
+          <div class="r-big">3 days ago</div>
+          <div class="r-sub">No pressure — just good to know. 🌿</div>
+        </div>
+        <p class="body rise">Toofies quietly remembers, so you don't have to keep it all in your head.</p>
+        <div class="spacer"></div>
+        <div class="foot rise"><button class="cta" data-next>Makes sense</button></div>`
+    },
+    { // 3 — one tap (interactive)
+      html: `<div class="spacer"></div>
+        <div class="eyebrow rise">One tap</div>
+        <h1 class="rise">Had something<br>sweet? Tap it.</h1>
+        <div class="rcard rise" id="demoCard" style="margin:8px 0 14px">
+          <div class="r-label">Last treat</div>
+          <div class="r-big" id="demoBig">3 days ago</div>
+          <div class="r-sub" id="demoSub">Tap a treat below to log it 👇</div>
+        </div>
+        <div class="chips rise" id="logChips">
+          <div class="chip" data-log>🍪</div><div class="chip" data-log>🍰</div>
+          <div class="chip" data-log>🍦</div><div class="chip" data-log>🍫</div>
+          <div class="chip" data-log>🍩</div>
+        </div>
+        <div class="spacer"></div>
+        <div class="foot rise"><button class="cta" data-next>Nice and easy</button></div>`
+    },
+    { // 4 — optional playful layer (safeguarded)
+      html: `<div class="spacer"></div>
+        <div class="rise">${toofie('smile')}</div>
+        <div class="eyebrow rise" style="margin-top:10px">Totally optional</div>
+        <h1 class="rise">Want a little<br>playfulness?</h1>
+        <p class="body rise">Some people like a gentle nudge — active days can unlock little surprises from your Toofies. Others just want to track and chill.</p>
+        <div class="spacer"></div>
+        <div class="foot rise">
+          <button class="cta" data-next>Sounds fun</button>
+          <button class="cta ghost" data-next>Keep it simple</button>
+        </div>`
+    },
+    { // 5 — privacy
+      html: `<div class="spacer"></div>
+        <div class="eyebrow rise">Just for you</div>
+        <h1 class="rise">Stays on<br>your phone 🔒</h1>
+        <div class="rise" style="width:100%">
+          <div class="row"><div class="ic">📱</div><div><div class="rt">On-device only</div><div class="rd">Your treats never leave your phone.</div></div></div>
+          <div class="row"><div class="ic">🙅</div><div><div class="rt">No account</div><div class="rd">Nothing to sign up for. Ever.</div></div></div>
+          <div class="row"><div class="ic">🤫</div><div><div class="rt">Nothing shared</div><div class="rd">No feeds, no followers, no judgement.</div></div></div>
+        </div>
+        <div class="spacer"></div>
+        <div class="foot rise"><button class="cta" data-next>Love that</button></div>`
+    },
+    { // 6 — make it yours (first action)
+      html: `<div class="spacer"></div>
+        <div class="eyebrow rise">Make it yours</div>
+        <h1 class="rise">What are your<br>favorites?</h1>
+        <p class="body rise" style="margin-bottom:16px">Pick a few — they'll be one tap away.</p>
+        <div class="chips rise" id="favChips">
+          <div class="chip" data-fav>🍪</div><div class="chip" data-fav>🍰</div>
+          <div class="chip" data-fav>🍦</div><div class="chip" data-fav>🍫</div>
+          <div class="chip" data-fav>🍩</div><div class="chip" data-fav>🍬</div>
+          <div class="chip" data-fav>🥧</div><div class="chip" data-fav>🧁</div>
+        </div>
+        <div class="spacer"></div>
+        <div class="foot rise"><button class="cta" data-next id="favCta">Pick a few to continue</button></div>`
+    },
+    { // 7 — done
+      html: `<div class="spacer"></div>
+        <div class="rise" id="finaleToofie">${toofie('grin')}</div>
+        <h1 class="rise">You're all set!</h1>
+        <p class="body rise">Your <span class="pist">Toofies</span> are rooting for you. Enjoy the sweet things — mindfully. 🦷✨</p>
+        <div class="spacer"></div>
+        <div class="foot rise"><button class="cta" id="startBtn">Start</button></div>`
+    }
+  ];
+
+  const stage = document.getElementById('stage');
+  const dotsEl = document.getElementById('dots');
+  const backEl = document.getElementById('back');
+  let i = 0;
+  const nodes = [];
+
+  screens.forEach((s, idx) => {
+    const d = document.createElement('div');
+    d.className = 'screen';
+    d.innerHTML = s.html;
+    stage.appendChild(d);
+    nodes.push(d);
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    dotsEl.appendChild(dot);
+  });
+
+  function render() {
+    nodes.forEach((n, idx) => {
+      n.classList.toggle('active', idx === i);
+      n.classList.toggle('left', idx < i);
+    });
+    [...dotsEl.children].forEach((d, idx) => d.classList.toggle('on', idx === i));
+    backEl.classList.toggle('show', i > 0);
+    if (i === screens.length - 1) burst();
+  }
+
+  function go(n) { i = Math.max(0, Math.min(screens.length - 1, n)); render(); }
+
+  stage.addEventListener('click', (e) => {
+    const chip = e.target.closest('[data-log]');
+    if (chip) {
+      chip.classList.add('tossed');
+      const big = document.getElementById('demoBig');
+      const sub = document.getElementById('demoSub');
+      if (big) { big.textContent = 'Just now'; big.style.color = 'var(--berry)'; }
+      if (sub) sub.textContent = 'Logged! Your Toofies noticed. 🦷';
+      setTimeout(() => chip.classList.remove('tossed'), 500);
+      return;
+    }
+    const fav = e.target.closest('[data-fav]');
+    if (fav) {
+      fav.classList.toggle('picked');
+      const any = stage.querySelectorAll('[data-fav].picked').length;
+      const cta = document.getElementById('favCta');
+      if (cta) cta.textContent = any ? 'Continue' : 'Pick a few to continue';
+      return;
+    }
+    if (e.target.closest('[data-next]')) go(i + 1);
+    if (e.target.id === 'startBtn') { go(0); }
+  });
+
+  backEl.addEventListener('click', () => go(i - 1));
+
+  // confetti burst on finale
+  const confettiEl = document.getElementById('confetti');
+  let burstDone = false;
+  function burst() {
+    if (burstDone || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    burstDone = true;
+    const cols = ['#E24A6E', '#8FBF6E', '#F4C04B', '#7EC8E3', '#F59DB5'];
+    for (let k = 0; k < 46; k++) {
+      const c = document.createElement('i');
+      const x = 20 + Math.random() * 320;
+      c.style.left = x + 'px';
+      c.style.background = cols[k % cols.length];
+      c.style.transform = `rotate(${Math.random() * 360}deg)`;
+      confettiEl.appendChild(c);
+      const dur = 1100 + Math.random() * 900;
+      const dx = (Math.random() - 0.5) * 120;
+      c.animate([
+        { transform: `translate(0,0) rotate(0deg)`, opacity: 1 },
+        { transform: `translate(${dx}px, 720px) rotate(${540 + Math.random()*360}deg)`, opacity: 1 }
+      ], { duration: dur, easing: 'cubic-bezier(.2,.6,.4,1)', delay: Math.random() * 250, fill: 'forwards' });
+      setTimeout(() => c.remove(), dur + 400);
+    }
+    const t = document.querySelector('#finaleToofie .toofie');
+    if (t) { t.classList.add('celebrate'); }
+  }
+
+  render();
+</script>
+</body>
+</html>
