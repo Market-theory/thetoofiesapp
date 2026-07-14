@@ -1,16 +1,20 @@
 {
   "expo": {
-    "name": "toofies",
+    "name": "Toofies",
     "slug": "toofies",
+    "owner": "toofies",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "toofies",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.toofies.app",
+      "supportsTablet": true
     },
     "android": {
+      "package": "com.toofies.app",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
