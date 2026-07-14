@@ -4,6 +4,11 @@ A curated database of **successful app designs, flows, and UI** we reference
 when designing Toofies — so every screen is grounded in what proven apps do,
 not invented from scratch. Reuse-before-invent.
 
+> **➡️ Start here: [`WHAT-TOOFIES-BORROWS.md`](./WHAT-TOOFIES-BORROWS.md)** — the
+> cross-app synthesis that maps every borrowed pattern to a specific Toofies
+> screen, with the locked-safeguard reject list. It's the grounding doc for the
+> design gate. The per-app `patterns.md` files below are the detailed source.
+
 ## How an entry is structured
 
 Each app lives in its own folder: `design-library/<app>/`
