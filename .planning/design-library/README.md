@@ -40,15 +40,21 @@ once.
 
 | App | Category | Flows to capture | Patterns analysed | Screens |
 |---|---|---|---|---|
-| **Strava** | Activity / Fitness | activity detail, post-activity summary, weekly progress, (social) | ✅ `strava/patterns.md` | ⏳ pending — drop into `strava/screens/` |
+| **Crumbl** ★ | **Dessert (direct peer)** | menu/home, flavor detail, rating, weekly reset | ✅ `crumbl/patterns.md` | ⏳ URL in `crumbl/screens/SOURCE.md` |
+| **Strava** ★ | Activity / Fitness | activity detail, post-activity summary, weekly progress, (social) | ✅ `strava/patterns.md` | ⏳ URL in `strava/screens/SOURCE.md` |
+| **Duolingo** ★ | Habit / gamification | streak, milestone, earn/spend economy, day-1 onboarding | ✅ `duolingo/patterns.md` | ⏳ URL in `duolingo/screens/SOURCE.md` |
 | _Finch_ | Self-care / mascot | onboarding, home, celebration | ⏳ | ⏳ |
-| _Duolingo_ | Habit / gamification | streak, milestone, day-1 onboarding | ⏳ | ⏳ |
 | _Streaks / Gentler Streak_ | Habit / streaks | streak visual, widget, watch | ⏳ | ⏳ |
 | _Beli_ | Social food discovery | ranked lists, friends, discovery | ⏳ | ⏳ |
 | _Cal AI_ | Nutrition / AI | onboarding, paywall | ⏳ | ⏳ |
 
-*(Rows in italics are the shortlist from our research — add screenshots to
-promote them from ⏳ to analysed.)*
+★ = founder-selected. Rows in italics are the research shortlist — add
+screenshots (or a Mobbin URL) to promote them.
+
+**On the pixels:** each analysed app has a `screens/SOURCE.md` with its exact
+Mobbin URL and the one-line command to pull the real screens on the Mac. The
+`patterns.md` cards are written now from public sources + knowledge of the app
+(honest about that), and get refined to real pixel values once pulled.
 
 ## Why these apps
 
