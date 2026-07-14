@@ -1,0 +1,330 @@
+<style>
+  /* ---- Page chrome tokens (theme-aware) ---- */
+  :root{
+    --page-bg:#efe9e0; --page-card:#fbf8f3; --page-ink:#2a2320;
+    --page-sub:#6f645b; --page-line:#e2d9cd; --page-accent:#b8592f;
+    --maxw:1180px;
+    --f-ui: ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --f-round: ui-rounded,"SF Pro Rounded","Hiragino Maru Gothic ProN",var(--f-ui);
+    --f-serif: "Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --page-bg:#17140f; --page-card:#211c16; --page-ink:#f2ece2;
+      --page-sub:#a99e90; --page-line:#332a20; --page-accent:#e79b6d; }
+  }
+  :root[data-theme="dark"]{ --page-bg:#17140f; --page-card:#211c16; --page-ink:#f2ece2;
+    --page-sub:#a99e90; --page-line:#332a20; --page-accent:#e79b6d; }
+  :root[data-theme="light"]{ --page-bg:#efe9e0; --page-card:#fbf8f3; --page-ink:#2a2320;
+    --page-sub:#6f645b; --page-line:#e2d9cd; --page-accent:#b8592f; }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page-bg);color:var(--page-ink);font-family:var(--f-ui);
+    line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:44px 22px 72px}
+
+  header.intro{max-width:760px;margin:0 auto 8px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--page-accent);
+    font-weight:700;margin:0 0 12px}
+  h1{font-family:var(--f-serif);font-weight:600;font-size:clamp(30px,5vw,46px);line-height:1.08;
+    margin:0 0 14px;text-wrap:balance;letter-spacing:-.01em}
+  .lede{font-size:17px;color:var(--page-sub);margin:0 0 8px;max-width:62ch}
+  .note{font-size:13.5px;color:var(--page-sub);background:var(--page-card);border:1px solid var(--page-line);
+    border-radius:12px;padding:12px 15px;margin:22px 0 0;max-width:70ch}
+  .note b{color:var(--page-ink)}
+
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:34px 26px;margin:48px 0 0;align-items:start}
+  @media(max-width:940px){.gallery{grid-template-columns:1fr;max-width:420px;margin-inline:auto}}
+  .col{display:flex;flex-direction:column;gap:20px}
+
+  /* ---- Phone frame ---- */
+  .phone{width:100%;max-width:340px;margin:0 auto;border-radius:42px;padding:11px;
+    background:linear-gradient(160deg,#2e2a27,#181513);box-shadow:0 26px 50px -20px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.25)}
+  .screen{border-radius:32px;overflow:hidden;background:var(--ground);color:var(--ink);
+    font-family:var(--font);position:relative;aspect-ratio:9/19.3;display:flex;flex-direction:column}
+  .statusbar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px 4px;
+    font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .statusbar .dots{display:flex;gap:4px;align-items:center;opacity:.85}
+  .statusbar .dots span{width:5px;height:5px;border-radius:50%;background:var(--ink)}
+  .scr-body{flex:1;overflow:hidden;padding:6px 18px 0;display:flex;flex-direction:column;gap:13px}
+
+  .appbar{display:flex;align-items:center;justify-content:space-between;padding:4px 0 2px}
+  .brand{font-family:var(--font-disp);font-weight:var(--w-disp);font-size:21px;letter-spacing:var(--ls-disp);color:var(--ink)}
+  .avatar{width:30px;height:30px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-size:15px}
+
+  .kicker{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);margin:0 0 3px}
+  .recency{font-family:var(--font-disp);font-weight:var(--w-disp);letter-spacing:var(--ls-disp);
+    font-size:23px;line-height:1.14;margin:0;color:var(--ink)}
+  .recency b{color:var(--accent)}
+  .clean{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--good);font-weight:600;margin-top:7px}
+  .clean .tick{width:15px;height:15px;border-radius:50%;background:var(--good);color:var(--ground);
+    display:grid;place-items:center;font-size:9px;font-weight:800}
+
+  .card{background:var(--card);border:var(--border);border-radius:var(--r);padding:15px 16px;box-shadow:var(--sh)}
+  .card .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--muted);margin:0 0 9px}
+
+  .streak-top{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+  .flame{width:40px;height:40px;border-radius:13px;background:var(--accent-soft);display:grid;place-items:center;font-size:20px}
+  .streak-n{font-family:var(--font-disp);font-weight:var(--w-disp);font-size:26px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
+  .streak-n small{display:block;font-family:var(--font);font-size:11.5px;font-weight:600;color:var(--muted);letter-spacing:.02em;margin-top:2px}
+  .week{display:flex;justify-content:space-between}
+  .day{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10px;color:var(--muted);font-weight:600}
+  .dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--ring);display:grid;place-items:center;font-size:10px}
+  .dot.done{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+  .dot.today{border-color:var(--accent);position:relative}
+  .dot.today::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+
+  .safe .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .safe .verdict{font-family:var(--font-disp);font-weight:var(--w-disp);font-size:17px;color:var(--ink)}
+  .safe .yes{color:var(--good)}
+  .pts{font-size:12px;color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums}
+  .bar{height:9px;border-radius:6px;background:var(--track);overflow:hidden;margin-top:11px}
+  .bar>span{display:block;height:100%;width:64%;border-radius:6px;background:var(--accent)}
+
+  .log .chips{display:flex;gap:8px;margin-bottom:12px}
+  .chip{flex:1;text-align:center;padding:9px 0;border-radius:14px;background:var(--soft);font-size:19px}
+  .btn{display:block;text-align:center;padding:14px;border-radius:var(--r-btn);background:var(--accent);
+    color:var(--on-accent);font-family:var(--font-disp);font-weight:var(--w-disp);font-size:15px;letter-spacing:.01em}
+
+  .tabbar{margin-top:auto;display:flex;justify-content:space-around;align-items:center;padding:11px 8px calc(11px + 6px);
+    border-top:1px solid var(--line);background:var(--tabbg)}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:600;color:var(--muted)}
+  .tab.on{color:var(--accent)}
+  .tab svg{width:21px;height:21px;stroke-width:2}
+  .homebar{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:110px;height:4px;border-radius:3px;background:var(--ink);opacity:.28}
+
+  /* ---- Spec caption ---- */
+  .spec{padding:0 4px}
+  .spec h3{margin:0 0 3px;font-family:var(--f-serif);font-weight:600;font-size:21px;color:var(--page-ink)}
+  .spec .echo{font-size:12px;color:var(--page-accent);font-weight:700;letter-spacing:.02em;margin:0 0 10px}
+  .spec p{font-size:13.5px;color:var(--page-sub);margin:0 0 12px;line-height:1.5}
+  .swatches{display:flex;gap:7px;margin:0 0 11px}
+  .sw{flex:1;height:30px;border-radius:8px;border:1px solid rgba(0,0,0,.12);position:relative}
+  .meta{font-size:12px;color:var(--page-sub);border-top:1px solid var(--page-line);padding-top:10px}
+  .meta b{color:var(--page-ink);font-weight:600}
+
+  footer.close{max-width:760px;margin:64px auto 0;border-top:1px solid var(--page-line);padding-top:26px}
+  footer.close h2{font-family:var(--f-serif);font-weight:600;font-size:23px;margin:0 0 12px}
+  footer.close p{font-size:15px;color:var(--page-sub);margin:0 0 12px;max-width:66ch}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .tag{font-size:12px;font-weight:600;padding:6px 11px;border-radius:20px;background:var(--page-card);
+    border:1px solid var(--page-line);color:var(--page-sub)}
+
+  /* ============ DIRECTION A — Sweet & Soft (Duolingo-adjacent) ============ */
+  .dir-a{
+    --ground:#fdf6ec;--ink:#3b2f28;--muted:#9a8b7d;--card:#ffffff;--soft:#fbeede;
+    --accent:#e8912d;--accent-soft:#fce5c8;--on-accent:#ffffff;--good:#4fa06a;
+    --ring:#ecdfce;--track:#f2e6d6;--line:#f0e6d8;--tabbg:#fffdf9;
+    --font:var(--f-round);--font-disp:var(--f-round);--w-disp:700;--ls-disp:-.01em;
+    --r:20px;--r-btn:18px;--border:1px solid #f2e7d7;
+    --sh:0 8px 20px -12px rgba(150,110,50,.35),0 1px 0 #fff inset;
+  }
+  /* ============ DIRECTION B — Patisserie (Crumbl-adjacent) ============ */
+  .dir-b{
+    --ground:#fbfaf7;--ink:#1a1613;--muted:#9c948a;--card:#ffffff;--soft:#f3f0ea;
+    --accent:#b23a6b;--accent-soft:#f6e4ec;--on-accent:#ffffff;--good:#4f7a52;
+    --ring:#e9e4db;--track:#eee9e1;--line:#efeae1;--tabbg:#ffffff;
+    --font:var(--f-ui);--font-disp:var(--f-serif);--w-disp:600;--ls-disp:-.015em;
+    --r:16px;--r-btn:40px;--border:1px solid #eee9e0;
+    --sh:0 10px 26px -16px rgba(30,20,15,.28);
+  }
+  /* ============ DIRECTION C — Clean & Kept (Strava-adjacent) ============ */
+  .dir-c{
+    --ground:#ffffff;--ink:#14181f;--muted:#8a919c;--card:#f6f7f9;--soft:#eef0f4;
+    --accent:#3d5afe;--accent-soft:#e4e8ff;--on-accent:#ffffff;--good:#1f9d57;
+    --ring:#e2e5eb;--track:#e7e9ee;--line:#eceef2;--tabbg:#ffffff;
+    --font:var(--f-ui);--font-disp:var(--f-ui);--w-disp:800;--ls-disp:-.02em;
+    --r:14px;--r-btn:12px;--border:1px solid #eceef2;
+    --sh:0 6px 16px -12px rgba(20,24,31,.2);
+  }
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <p class="eyebrow">Toofies · design directions</p>
+    <h1>One home screen, three ways to feel it.</h1>
+    <p class="lede">The same Toofies home — recency, your days-on-plan streak, “am I safe to have a dessert?”, and a warm way to log — rendered in three distinct visual directions. Each is pulled from one of the apps you sent, and grounded in the design system we built from them.</p>
+    <div class="note"><b>These are options to react to, not decisions.</b> No palette, type, or layout is chosen — pick the one that feels most like Toofies, mix across them, or tell me what’s off. Colors and fonts here are candidate directions; the real spec is ratified only after you choose. <em>(Type shown in close system stand-ins for the named faces.)</em></div>
+  </header>
+
+  <div class="gallery">
+
+    <!-- ================= DIRECTION A ================= -->
+    <div class="col">
+      <div class="phone">
+        <div class="screen dir-a">
+          <div class="statusbar"><span>9:41</span><span class="dots"><span></span><span></span><span></span></span></div>
+          <div class="scr-body">
+            <div class="appbar"><span class="brand">Toofies</span><span class="avatar">🦷</span></div>
+            <div>
+              <p class="kicker">Last dessert</p>
+              <p class="recency">It’s been <b>4 days</b> since your last treat.</p>
+              <span class="clean"><span class="tick">✓</span> Clean so far today</span>
+            </div>
+            <div class="card">
+              <div class="streak-top">
+                <div class="flame">🦷</div>
+                <div class="streak-n">6<small>days on plan</small></div>
+              </div>
+              <div class="week">
+                <div class="day"><span class="dot done">✓</span>M</div>
+                <div class="day"><span class="dot done">✓</span>T</div>
+                <div class="day"><span class="dot done">✓</span>W</div>
+                <div class="day"><span class="dot done">✓</span>T</div>
+                <div class="day"><span class="dot today"></span>F</div>
+                <div class="day"><span class="dot"></span>S</div>
+                <div class="day"><span class="dot"></span>S</div>
+              </div>
+            </div>
+            <div class="card safe">
+              <p class="lbl">Am I safe to have a dessert?</p>
+              <div class="row"><span class="verdict yes">Yes — 1 banked 🎉</span><span class="pts">50 / 30 pts</span></div>
+              <div class="bar"><span></span></div>
+            </div>
+            <div class="card log">
+              <p class="lbl">Treat yourself, mindfully</p>
+              <div class="chips"><span class="chip">🍪</span><span class="chip">🍰</span><span class="chip">🍦</span><span class="chip">🍩</span></div>
+              <span class="btn">Log a dessert</span>
+            </div>
+          </div>
+          <div class="tabbar">
+            <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</span>
+            <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>Log</span>
+            <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>You</span>
+          </div>
+          <div class="homebar"></div>
+        </div>
+      </div>
+      <div class="spec">
+        <h3>A · Sweet &amp; Soft</h3>
+        <p class="echo">echoes Duolingo + Crumbl’s warmth</p>
+        <p>The most encouraging and gamified. Chunky rounded cards, soft shadows, a friendly rounded face. Leans into streak-joy — feels like a treat, never a scold.</p>
+        <div class="swatches"><span class="sw" style="background:#fdf6ec"></span><span class="sw" style="background:#e8912d"></span><span class="sw" style="background:#4fa06a"></span><span class="sw" style="background:#3b2f28"></span></div>
+        <p class="meta"><b>Palette:</b> cream · bakery amber · pistachio green &nbsp;·&nbsp; <b>Type:</b> Fredoka / Nunito</p>
+      </div>
+    </div>
+
+    <!-- ================= DIRECTION B ================= -->
+    <div class="col">
+      <div class="phone">
+        <div class="screen dir-b">
+          <div class="statusbar"><span>9:41</span><span class="dots"><span></span><span></span><span></span></span></div>
+          <div class="scr-body">
+            <div class="appbar"><span class="brand">Toofies</span><span class="avatar">🦷</span></div>
+            <div>
+              <p class="kicker">Last dessert</p>
+              <p class="recency">It’s been <b>4 days</b> since your last treat.</p>
+              <span class="clean"><span class="tick">✓</span> Clean so far today</span>
+            </div>
+            <div class="card">
+              <div class="streak-top">
+                <div class="flame">🦷</div>
+                <div class="streak-n">6<small>days on plan</small></div>
+              </div>
+              <div class="week">
+                <div class="day"><span class="dot done">✓</span>M</div>
+                <div class="day"><span class="dot done">✓</span>T</div>
+                <div class="day"><span class="dot done">✓</span>W</div>
+                <div class="day"><span class="dot done">✓</span>T</div>
+                <div class="day"><span class="dot today"></span>F</div>
+                <div class="day"><span class="dot"></span>S</div>
+                <div class="day"><span class="dot"></span>S</div>
+              </div>
+            </div>
+            <div class="card safe">
+              <p class="lbl">Am I safe to have a dessert?</p>
+              <div class="row"><span class="verdict yes">Yes — 1 banked</span><span class="pts">50 / 30 pts</span></div>
+              <div class="bar"><span></span></div>
+            </div>
+            <div class="card log">
+              <p class="lbl">Treat yourself, mindfully</p>
+              <div class="chips"><span class="chip">🍪</span><span class="chip">🍰</span><span class="chip">🍦</span><span class="chip">🍩</span></div>
+              <span class="btn">Log a dessert</span>
+            </div>
+          </div>
+          <div class="tabbar">
+            <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</span>
+            <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>Log</span>
+            <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>You</span>
+          </div>
+          <div class="homebar"></div>
+        </div>
+      </div>
+      <div class="spec">
+        <h3>B · Patisserie</h3>
+        <p class="echo">echoes Crumbl’s two-register premium</p>
+        <p>The most calm and premium. A near-monochrome shell with an editorial serif; a single berry accent kept only for delight. Treats dessert as something elegant, not a vice.</p>
+        <div class="swatches"><span class="sw" style="background:#fbfaf7"></span><span class="sw" style="background:#b23a6b"></span><span class="sw" style="background:#4f7a52"></span><span class="sw" style="background:#1a1613"></span></div>
+        <p class="meta"><b>Palette:</b> warm off-white · berry (celebration only) · ink &nbsp;·&nbsp; <b>Type:</b> Playfair Display / Inter</p>
+      </div>
+    </div>
+
+    <!-- ================= DIRECTION C ================= -->
+    <div class="col">
+      <div class="phone">
+        <div class="screen dir-c">
+          <div class="statusbar"><span>9:41</span><span class="dots"><span></span><span></span><span></span></span></div>
+          <div class="scr-body">
+            <div class="appbar"><span class="brand">Toofies</span><span class="avatar">🦷</span></div>
+            <div>
+              <p class="kicker">Last dessert</p>
+              <p class="recency">It’s been <b>4 days</b> since your last treat.</p>
+              <span class="clean"><span class="tick">✓</span> Clean so far today</span>
+            </div>
+            <div class="card">
+              <div class="streak-top">
+                <div class="flame">🦷</div>
+                <div class="streak-n">6<small>days on plan</small></div>
+              </div>
+              <div class="week">
+                <div class="day"><span class="dot done">✓</span>M</div>
+                <div class="day"><span class="dot done">✓</span>T</div>
+                <div class="day"><span class="dot done">✓</span>W</div>
+                <div class="day"><span class="dot done">✓</span>T</div>
+                <div class="day"><span class="dot today"></span>F</div>
+                <div class="day"><span class="dot"></span>S</div>
+                <div class="day"><span class="dot"></span>S</div>
+              </div>
+            </div>
+            <div class="card safe">
+              <p class="lbl">Am I safe to have a dessert?</p>
+              <div class="row"><span class="verdict yes">Yes — 1 banked</span><span class="pts">50 / 30 pts</span></div>
+              <div class="bar"><span></span></div>
+            </div>
+            <div class="card log">
+              <p class="lbl">Treat yourself, mindfully</p>
+              <div class="chips"><span class="chip">🍪</span><span class="chip">🍰</span><span class="chip">🍦</span><span class="chip">🍩</span></div>
+              <span class="btn">Log a dessert</span>
+            </div>
+          </div>
+          <div class="tabbar">
+            <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</span>
+            <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>Log</span>
+            <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>You</span>
+          </div>
+          <div class="homebar"></div>
+        </div>
+      </div>
+      <div class="spec">
+        <h3>C · Clean &amp; Kept</h3>
+        <p class="echo">echoes Strava’s structured clarity</p>
+        <p>The most legible and data-forward. Crisp neutrals, tight stat cards, tabular numbers, a confident single accent. Every number reads at a glance — closest to a serious health tool.</p>
+        <div class="swatches"><span class="sw" style="background:#ffffff"></span><span class="sw" style="background:#3d5afe"></span><span class="sw" style="background:#1f9d57"></span><span class="sw" style="background:#14181f"></span></div>
+        <p class="meta"><b>Palette:</b> white · indigo (action) · green (complete) · ink &nbsp;·&nbsp; <b>Type:</b> Outfit / Rubik</p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="close">
+    <h2>What to do with these</h2>
+    <p>Tell me which direction feels most like Toofies — or take the streak card from one, the calm of another, the colors of a third. There’s no wrong answer here; the point is to react. Whatever you land on gets written into the design spec and the decision register, and only then does it become the real look.</p>
+    <p>Every direction already honors the locked rules: guilt-free voice, no calories or weight, a forgiving streak, and a treat that’s celebrated rather than policed.</p>
+    <div class="tags">
+      <span class="tag">Un-ratified — react, don’t ratify</span>
+      <span class="tag">Recency-first home</span>
+      <span class="tag">Days-on-plan streak</span>
+      <span class="tag">“Am I safe?” progress</span>
+      <span class="tag">Warm logging</span>
+    </div>
+  </footer>
+</div>
