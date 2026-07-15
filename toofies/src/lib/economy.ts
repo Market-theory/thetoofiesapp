@@ -102,10 +102,10 @@ function dessertsInRange(s: EconomyState, start: Date, end: Date): TreatEntry[] 
 }
 
 function earliestDay(s: EconomyState): Date {
-  const install = new Date(s.installDate);
-  const dates = entryDates(s);
-  const earliest = dates.length ? new Date(Math.min(...dates.map((d) => d.getTime()))) : install;
-  return startOfDay(new Date(Math.min(install.getTime(), earliest.getTime())));
+  // Earning starts the day the app was installed. An entry dated before install
+  // may still debit, but must never mint clean-day credit for days the app never
+  // observed — and a far-past date must not blow up the credit loop.
+  return startOfDay(new Date(s.installDate));
 }
 
 // —— Points economy ————————————————————————————————————————————————————————
@@ -116,7 +116,8 @@ function earliestDay(s: EconomyState): Date {
 // unaffordable dessert is forgiven (never carried as debt).
 
 export function activityPoints(steps: number): number {
-  return Math.min(Math.floor(steps / STEPS_PER_ACTIVITY_POINT), MAX_ACTIVITY_POINTS_PER_DAY);
+  // Floor at 0 so a corrupt/negative stored step count can't cancel other credits.
+  return Math.max(0, Math.min(Math.floor(steps / STEPS_PER_ACTIVITY_POINT), MAX_ACTIVITY_POINTS_PER_DAY));
 }
 
 type LedgerEvent = { date: Date; delta: number };
@@ -126,10 +127,10 @@ type LedgerEvent = { date: Date; delta: number };
  * day credits at the following midnight.
  */
 function ledgerEvents(s: EconomyState, now: Date): LedgerEvent[] {
-  const events: LedgerEvent[] = s.entries.map((e) => ({
-    date: new Date(e.date),
-    delta: -e.pointsSpent,
-  }));
+  // Ignore future-dated desserts — they must not debit the balance as of `now`.
+  const events: LedgerEvent[] = s.entries
+    .filter((e) => new Date(e.date).getTime() <= now.getTime())
+    .map((e) => ({ date: new Date(e.date), delta: -e.pointsSpent }));
 
   const todayStart = startOfDay(now);
   let day = earliestDay(s);
@@ -151,7 +152,9 @@ function ledgerEvents(s: EconomyState, now: Date): LedgerEvent[] {
     day = next;
   }
 
-  return events.sort((a, b) => a.date.getTime() - b.date.getTime());
+  // Time order; on an exact tie (a dessert logged at local midnight) apply the
+  // day's credit BEFORE the debit, so a just-banked clean day can cover it.
+  return events.sort((a, b) => a.date.getTime() - b.date.getTime() || b.delta - a.delta);
 }
 
 export function balance(s: EconomyState, now: Date = new Date()): number {
@@ -217,7 +220,9 @@ export function questGoal(s: EconomyState, dayStart: Date): number {
   }
   if (samples.length === 0) return DEFAULT_QUEST_GOAL;
   const sorted = samples.slice().sort((a, b) => a - b);
-  const median = sorted[Math.floor(sorted.length / 2)];
+  const mid = Math.floor(sorted.length / 2);
+  const median =
+    sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
   const clamped = Math.min(12_000, Math.max(3_000, Math.floor(median * 1.05)));
   return Math.floor((clamped + 250) / 500) * 500;
 }
@@ -281,7 +286,8 @@ export function lastDessertDate(s: EconomyState): Date | null {
 export function daysSinceLastDessert(s: EconomyState, now: Date = new Date()): number | null {
   const last = lastDessertDate(s);
   if (!last) return null;
-  return daysBetween(last, now);
+  // Never report a negative "days since" if an entry is somehow future-dated.
+  return Math.max(0, daysBetween(last, now));
 }
 
 export function isCleanSoFarToday(s: EconomyState, now: Date = new Date()): boolean {

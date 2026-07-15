@@ -29,6 +29,23 @@ import { makeEntry, type TreatEntry, type TreatKind } from './treats';
 
 const STORAGE_KEY = 'toofies.v2';
 
+/** Guard a persisted blob before merging it, so corrupt data can't crash render. */
+function isValidSaved(v: unknown): v is Partial<EconomyState> {
+  if (!v || typeof v !== 'object') return false;
+  const s = v as Record<string, unknown>;
+  if ('entries' in s && !Array.isArray(s.entries)) return false;
+  if ('dessertCost' in s && typeof s.dessertCost !== 'number') return false;
+  if ('healthConnected' in s && typeof s.healthConnected !== 'boolean') return false;
+  if ('installDate' in s && typeof s.installDate !== 'string') return false;
+  if (
+    'stepsByDay' in s &&
+    (typeof s.stepsByDay !== 'object' || s.stepsByDay === null || Array.isArray(s.stepsByDay))
+  ) {
+    return false;
+  }
+  return true;
+}
+
 type Store = {
   ready: boolean;
   state: EconomyState;
@@ -52,8 +69,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       try {
         const raw = await AsyncStorage.getItem(STORAGE_KEY);
         if (alive && raw) {
-          const saved = JSON.parse(raw) as Partial<EconomyState>;
-          setState((prev) => ({ ...prev, ...saved }));
+          const saved = JSON.parse(raw) as unknown;
+          // Only merge a structurally-valid store; a corrupt blob would otherwise
+          // crash the economy engine at render time. On mismatch, start fresh.
+          if (isValidSaved(saved)) {
+            setState((prev) => ({ ...prev, ...saved }));
+          }
         }
       } catch {
         // Corrupt or missing store — start fresh; nothing to surface.
@@ -77,15 +98,27 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     () => ({
       ready,
       state,
-      logDessert: (kind, at = new Date()) =>
+      // Mutations are inert until hydration completes, so a tap during the async
+      // load can't be silently clobbered when saved data lands.
+      logDessert: (kind, at = new Date()) => {
+        if (!ready) return;
         setState((s) => ({
           ...s,
           entries: [...s.entries, makeEntry(kind, s.dessertCost, at)],
-        })),
-      removeEntry: (id) =>
-        setState((s) => ({ ...s, entries: s.entries.filter((e: TreatEntry) => e.id !== id) })),
-      setDessertCost: (cost) => setState((s) => ({ ...s, dessertCost: Math.max(1, cost) })),
-      reset: () => setState(initialState()),
+        }));
+      },
+      removeEntry: (id) => {
+        if (!ready) return;
+        setState((s) => ({ ...s, entries: s.entries.filter((e: TreatEntry) => e.id !== id) }));
+      },
+      setDessertCost: (cost) => {
+        if (!ready) return;
+        setState((s) => ({ ...s, dessertCost: Math.max(1, cost) }));
+      },
+      reset: () => {
+        if (!ready) return;
+        setState(initialState());
+      },
     }),
     [ready, state],
   );
