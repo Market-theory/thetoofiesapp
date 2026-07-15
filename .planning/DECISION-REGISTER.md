@@ -125,21 +125,45 @@ enrollment (verify). Founder likely already has a **Google** developer account;
 - Public-launch intent (both stores + a marketing push) **nudges D3 toward
   "public launch"** — founder to confirm.
 
-### D4 · 🔁 RE-OPENED 2026-07-15 — founder signals intent to COLLECT information
-The founder stated the intent is to **collect user information**, which **reverses
-the 2026-07-13 ratification of D4 (on-device only, "Data Not Collected")** and
-supersedes the privacy posture the current PRD + code are built on. This is the
-single highest-impact architectural fork in the product, so it is re-opened —
-**not** silently applied — pending scope clarification. Blocks: D1 (positioning
-weight), D2 (v1 scope), D5 (backend), D10 (monetization), the App Store/Play
-privacy labels, and the whole security/legal surface. Questions to resolve
-(see reply): **what** data, **why**, and **when** (v1 vs later). Honest tension
-to weigh (R6): "Data Not Collected" was a genuine competitive strength and zero
-legal surface; collecting flips on GDPR/CCPA, in-app account deletion (Apple
-requirement), a secure backend + breach liability, and a full privacy label —
-in exchange for enabling accounts/social/growth. **Founder decides with eyes
-open.** Until resolved, D4's status is CONTESTED and no data-collection code or
-backend is built.
+### D4 · 🟢 RATIFIED 2026-07-15 — COLLECT information (accounts + social in v1)
+Founder decided: v1 **collects information** and includes **accounts + social from
+the start**, for **all four purposes** — social/sharing, cross-device sync,
+growth/analytics, and audience/marketing. This **reverses** the 2026-07-13
+on-device / "Data Not Collected" ratification and **supersedes** the current PRD's
+privacy posture. Consequences now IN SCOPE (not optional): a **backend** (DB +
+auth + file storage + realtime); a **privacy policy**; **GDPR/CCPA**; Apple-required
+**in-app account deletion**; a full **privacy label** (no longer "Data Not
+Collected"); **content moderation** for the dessert feed (user-generated content);
+and **security / breach** responsibility. Re-scopes **D1** (social is now
+co-primary, not secondary), **D2** (v1 = a social, cloud-backed app, not
+solo/on-device), **D5** (backend = yes), **D22** (social pulled into v1), and the
+store-submission docs.
+
+**Honest risk on record (R1 + R5):** this is the largest, slowest-to-launch,
+highest-obligation version, chosen before ANY real-user validation. **Rec (🟡, does
+NOT override the decision):** sequence a **thin, shippable social core** first
+(accounts + synced personal log + follow + a basic share/feed) and fast-follow the
+heavy parts (discovery, rich profiles, comments-at-scale, moderation depth), so
+something real ships and teaches before the full platform is built.
+
+**New decisions this spawns (all 🔴 OPEN):**
+- **D30 · Backend provider** — Rec (🟡) **Supabase** (Postgres + Auth + Storage +
+  Realtime + row-level security); the founder's other product already runs on
+  Supabase, so it reuses a known stack.
+- **D31 · Auth** — Rec (🟡) **Clerk** or **Supabase Auth**, plus **Sign in with
+  Apple** (Apple requires it when other social logins are offered).
+- **D32 · Content moderation** — required for a public dessert feed (report/block +
+  a content policy). Scope + tooling 🔴.
+- **D33 · Minimum "social v1" scope** — exactly what ships first vs fast-follow.
+- **D23 · Location** — if "where I had it" sharing is wanted, Rec (🟡) **place
+  check-ins, not live location** (highest safety sensitivity); default off.
+- **Compliance workstream** — privacy policy, privacy label, in-app account
+  deletion, data retention/deletion — owned before any public launch.
+
+**Stack impact (D28):** this **strengthens keeping Expo/RN** (native push, real
+store apps, both platforms) + a backend; a pure PWA is a poor fit for a push-driven
+social app. Use Framer for UI design only. **The current PRD (on-device) now needs
+a substantial rewrite to this social/backed direction.**
 
 ---
 
