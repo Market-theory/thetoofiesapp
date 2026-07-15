@@ -14,6 +14,18 @@ just the untouched prototype default, not an approved design.
   punitive, no calories/weight/diet language, forgiving) — those are framing,
   not aesthetics.
 
+## 🟡 Founder's leading reference (2026-07-15) — an option, not a decision
+
+The founder shared **https://ocha.framer.website/** ("OCHA — Brutalist Matcha
+Bar") as *"the perfect illustration of how I think the brand should look."* Full
+analysis: `design-library/ocha/teardown.md`. In short: **warm cream ground + black
+ink + a bold condensed uppercase display face (Anton-style) + soft rounded cards +
+a blossom-pink pop**, "soft brutalism," and a **witty, guilt-free, lifestyle
+voice** (the strongest fit). **Honest caveat for the gate:** matcha *green* as the
+primary reads tea/wellness — for a *dessert* app a warm dessert-led accent may need
+to lead, with green as a secondary (open). Per the gate this is a strong **input**
+to turn into 2–3 concrete options and ratify — **not yet applied.**
+
 ## Open questions (to decide together)
 
 1. **Overall vibe** — playful/candy? clean/minimal? something else?
