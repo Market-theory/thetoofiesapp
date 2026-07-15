@@ -1,0 +1,447 @@
+<title>Toofies — economy preview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<style>
+  /* ------------------------------------------------------------------ *
+   * Toofies — FUNCTIONAL PREVIEW of the ported points economy.
+   * Deliberately un-styled per the project constitution (§1): no brand
+   * palette / type / layout decisions are made here — those go through
+   * the design gate. Neutral, structural styling only, mirroring the
+   * React Native scaffold (src/app/index.tsx). The dessert emoji are the
+   * only color, exactly as in the real app (they're data, not a choice).
+   * ------------------------------------------------------------------ */
+  :root {
+    /* Considered neutrals with a faint warm bias (dessert), not pure grey. */
+    --bg: #faf9f7;
+    --surface: #ffffff;
+    --ink: #1c1a17;
+    --ink-soft: #6b6660;
+    --ink-faint: #9a938b;
+    --line: #e7e3dd;
+    --line-strong: #d5cfc6;
+    --accent-ink: #2b2824;      /* neutral interactive ink, not a brand hue */
+    --good: #3f7d54;
+    --warn: #9a6b2f;
+    --danger: #a23b34;
+    --radius: 14px;
+    --maxw: 480px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17150f;
+      --surface: #201d18;
+      --ink: #f2efe9;
+      --ink-soft: #b3aca2;
+      --ink-faint: #857f75;
+      --line: #322e27;
+      --line-strong: #423d34;
+      --accent-ink: #f2efe9;
+      --good: #7fc492;
+      --warn: #d6a866;
+      --danger: #e2857d;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #faf9f7; --surface: #ffffff; --ink: #1c1a17; --ink-soft: #6b6660;
+    --ink-faint: #9a938b; --line: #e7e3dd; --line-strong: #d5cfc6;
+    --accent-ink: #2b2824; --good: #3f7d54; --warn: #9a6b2f; --danger: #a23b34;
+  }
+  :root[data-theme="dark"] {
+    --bg: #17150f; --surface: #201d18; --ink: #f2efe9; --ink-soft: #b3aca2;
+    --ink-faint: #857f75; --line: #322e27; --line-strong: #423d34;
+    --accent-ink: #f2efe9; --good: #7fc492; --warn: #d6a866; --danger: #e2857d;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: max(20px, env(safe-area-inset-top)) 20px calc(40px + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .banner {
+    border: 1px dashed var(--line-strong);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .banner b { color: var(--ink); font-weight: 600; }
+
+  header.title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  h1 {
+    font-size: clamp(30px, 9vw, 38px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 2px 0 0;
+  }
+  .themebtn {
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--ink-soft);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .themebtn:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 2px; }
+
+  section.card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0;
+  }
+  .big { font-size: 20px; font-weight: 600; margin: 0; text-wrap: balance; }
+  .muted { font-size: 13.5px; color: var(--ink-soft); margin: 0; font-variant-numeric: tabular-nums; }
+  .big.good { color: var(--good); }
+  .big.warn { color: var(--warn); }
+
+  .streak-num { font-size: 40px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+  button.chip {
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 9px 15px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform .06s ease, border-color .12s ease;
+  }
+  button.chip:active { transform: scale(0.96); }
+  button.chip:hover { border-color: var(--accent-ink); }
+  button.chip:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 2px; }
+
+  .week { display: flex; justify-content: space-between; gap: 4px; }
+  .day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .day .count {
+    font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums;
+    width: 34px; height: 34px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--line);
+  }
+  .day.has .count { border-color: var(--warn); color: var(--warn); }
+  .day.clean .count { color: var(--ink-faint); }
+  .day .lbl { font-size: 10.5px; color: var(--ink-faint); }
+  .day.today .lbl { color: var(--ink); font-weight: 600; }
+
+  .resetbtn {
+    align-self: flex-start;
+    background: transparent; border: none;
+    color: var(--danger); font-size: 13px; cursor: pointer; padding: 4px 0;
+  }
+  .resetbtn:focus-visible { outline: 2px solid var(--danger); outline-offset: 2px; }
+
+  footer.note { font-size: 12px; color: var(--ink-faint); line-height: 1.5; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap" id="app"></div>
+
+<script>
+/* ==================================================================== *
+ *  economy.ts + treats.ts  — faithful vanilla-JS port.
+ *  (Same logic that ships in the app; verified against the parity test.)
+ * ==================================================================== */
+const POINTS_PER_CLEAN_DAY = 10;
+const STEPS_PER_ACTIVITY_POINT = 1500;
+const MAX_ACTIVITY_POINTS_PER_DAY = 15;
+const QUEST_BONUS_POINTS = 5;
+const DEFAULT_QUEST_GOAL = 6000;
+const DEFAULT_DESSERT_COST = 30;
+const STREAK_MILESTONES = new Set([3, 7, 10, 14, 21, 30, 50, 75, 100, 150, 200, 365]);
+
+const TREATS = {
+  cookie:    { name: 'Cookie',    emoji: '🍪' },
+  cake:      { name: 'Cake',      emoji: '🍰' },
+  iceCream:  { name: 'Ice cream', emoji: '🍦' },
+  chocolate: { name: 'Chocolate', emoji: '🍫' },
+  donut:     { name: 'Donut',     emoji: '🍩' },
+  candy:     { name: 'Candy',     emoji: '🍬' },
+  pie:       { name: 'Pie',       emoji: '🥧' },
+  cupcake:   { name: 'Cupcake',   emoji: '🧁' },
+};
+const QUICK_LOG = ['cookie', 'iceCream', 'cake', 'donut'];
+
+let _counter = 0;
+function makeEntry(kind, pointsSpent, date) {
+  const t = TREATS[kind];
+  _counter = (_counter + 1) % 1000000;
+  return {
+    id: 't_' + Date.now().toString(36) + '_' + _counter.toString(36),
+    emoji: t.emoji, name: t.name, date: date.toISOString(), pointsSpent,
+  };
+}
+
+const startOfDay = (d) => { const s = new Date(d); s.setHours(0,0,0,0); return s; };
+const addDays = (d, n) => { const r = new Date(d); r.setDate(r.getDate() + n); return r; };
+function dayKey(d) {
+  const s = startOfDay(d);
+  return s.getFullYear() + '-' + String(s.getMonth()+1).padStart(2,'0') + '-' + String(s.getDate()).padStart(2,'0');
+}
+const daysBetween = (from, to) => Math.round((startOfDay(to).getTime() - startOfDay(from).getTime()) / 86400000);
+
+const entryDates = (s) => s.entries.map((e) => new Date(e.date));
+const dessertsInRange = (s, start, end) => s.entries.filter((e) => {
+  const t = new Date(e.date).getTime(); return t >= start.getTime() && t < end.getTime();
+});
+function earliestDay(s) {
+  const install = new Date(s.installDate);
+  const dates = entryDates(s);
+  const earliest = dates.length ? new Date(Math.min(...dates.map((d) => d.getTime()))) : install;
+  return startOfDay(new Date(Math.min(install.getTime(), earliest.getTime())));
+}
+const activityPoints = (steps) => Math.min(Math.floor(steps / STEPS_PER_ACTIVITY_POINT), MAX_ACTIVITY_POINTS_PER_DAY);
+
+function questGoal(s, dayStart) {
+  const samples = [];
+  for (let o = 1; o <= 7; o++) { const st = s.stepsByDay[dayKey(addDays(dayStart, -o))] ?? 0; if (st > 0) samples.push(st); }
+  if (!samples.length) return DEFAULT_QUEST_GOAL;
+  const sorted = samples.slice().sort((a,b) => a-b);
+  const median = sorted[Math.floor(sorted.length/2)];
+  const clamped = Math.min(12000, Math.max(3000, Math.floor(median * 1.05)));
+  return Math.floor((clamped + 250) / 500) * 500;
+}
+const questCompleted = (s, dayStart) => s.healthConnected && (s.stepsByDay[dayKey(dayStart)] ?? 0) >= questGoal(s, dayStart);
+
+function ledgerEvents(s, now) {
+  const events = s.entries.map((e) => ({ date: new Date(e.date), delta: -e.pointsSpent }));
+  const todayStart = startOfDay(now);
+  let day = earliestDay(s);
+  while (day.getTime() < todayStart.getTime()) {
+    const next = addDays(day, 1);
+    let credit = 0;
+    if (dessertsInRange(s, day, next).length === 0) credit += POINTS_PER_CLEAN_DAY;
+    if (s.healthConnected) {
+      credit += activityPoints(s.stepsByDay[dayKey(day)] ?? 0);
+      if (questCompleted(s, day)) credit += QUEST_BONUS_POINTS;
+    }
+    if (credit > 0) events.push({ date: next, delta: credit });
+    day = next;
+  }
+  return events.sort((a,b) => a.date.getTime() - b.date.getTime());
+}
+const balance = (s, now) => ledgerEvents(s, now).reduce((bal, e) => Math.max(0, bal + e.delta), 0);
+
+function availability(s, now) {
+  const bal = balance(s, now);
+  const cost = s.dessertCost;
+  const pointsNeeded = Math.max(0, cost - bal);
+  return {
+    balance: bal, cost, affordable: bal >= cost,
+    bankedDesserts: cost > 0 ? Math.floor(bal / cost) : 0,
+    pointsNeeded,
+    cleanDaysNeeded: pointsNeeded > 0 ? Math.ceil(pointsNeeded / POINTS_PER_CLEAN_DAY) : 0,
+    progress: cost > 0 ? Math.min(1, bal / cost) : 1,
+  };
+}
+const todaySteps = (s, now) => s.stepsByDay[dayKey(now)] ?? 0;
+function pendingPointsToday(s, now) {
+  let pending = isCleanSoFarToday(s, now) ? POINTS_PER_CLEAN_DAY : 0;
+  if (s.healthConnected) {
+    pending += activityPoints(todaySteps(s, now));
+    if (questCompleted(s, startOfDay(now))) pending += QUEST_BONUS_POINTS;
+  }
+  return pending;
+}
+
+function overspentDays(s, now) {
+  let bal = 0; const days = new Set();
+  for (const e of ledgerEvents(s, now)) {
+    const unclamped = bal + e.delta;
+    if (e.delta < 0 && unclamped < 0) days.add(dayKey(e.date));
+    bal = Math.max(0, unclamped);
+  }
+  return days;
+}
+function onPlanStreak(s, now) {
+  const overspent = overspentDays(s, now);
+  const firstDay = earliestDay(s);
+  let streak = 0; let day = startOfDay(now);
+  while (day.getTime() >= firstDay.getTime() && !overspent.has(dayKey(day))) { streak++; day = addDays(day, -1); }
+  return streak;
+}
+const streakMilestoneToday = (s, now) => { const k = onPlanStreak(s, now); return STREAK_MILESTONES.has(k) ? k : null; };
+
+function lastDessertDate(s) {
+  const d = entryDates(s); if (!d.length) return null; return new Date(Math.max(...d.map((x) => x.getTime())));
+}
+function daysSinceLastDessert(s, now) { const l = lastDessertDate(s); return l ? daysBetween(l, now) : null; }
+function isCleanSoFarToday(s, now) {
+  const t0 = startOfDay(now); return dessertsInRange(s, t0, addDays(t0, 1)).length === 0;
+}
+function lastSevenDays(s, now) {
+  const t0 = startOfDay(now); const out = [];
+  for (let off = 6; off >= 0; off--) {
+    const dS = addDays(t0, -off), dE = addDays(dS, 1);
+    const entries = dessertsInRange(s, dS, dE);
+    out.push({
+      key: dayKey(dS),
+      label: off === 0 ? 'Today' : dS.toLocaleDateString(undefined, { weekday: 'short' }),
+      count: entries.length,
+    });
+  }
+  return out;
+}
+
+/* ==================================================================== *
+ *  Store — localStorage persistence (mirrors AsyncStorage 'toofies.v2').
+ * ==================================================================== */
+const STORAGE_KEY = 'toofies.v2';
+function initialState(now) {
+  return { dessertCost: DEFAULT_DESSERT_COST, entries: [], healthConnected: false, stepsByDay: {}, installDate: now.toISOString() };
+}
+function load() {
+  try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) return JSON.parse(raw); } catch (e) {}
+  // First run: seed 5 example clean days so the mechanic is visible immediately.
+  // (Honest demo scaffolding — "Reset" wipes it to the true empty first-run state.)
+  const s = initialState(new Date());
+  s.installDate = addDays(new Date(), -5).toISOString();
+  save(s);
+  return s;
+}
+function save(s) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch (e) {} }
+
+let state = load();
+
+function logDessert(kind) {
+  const now = new Date();
+  state = { ...state, entries: [...state.entries, makeEntry(kind, state.dessertCost, now)] };
+  save(state); render();
+}
+function reset() {
+  state = initialState(new Date());   // true empty first-run state
+  save(state); render();
+}
+
+/* ==================================================================== *
+ *  View — mirrors src/app/index.tsx section-for-section.
+ * ==================================================================== */
+function el(tag, cls, html) { const n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; }
+
+function render() {
+  const now = new Date();
+  const dsl = daysSinceLastDessert(state, now);
+  const av = availability(state, now);
+  const streak = onPlanStreak(state, now);
+  const milestone = streakMilestoneToday(state, now);
+  const clean = isCleanSoFarToday(state, now);
+  const pending = pendingPointsToday(state, now);
+  const week = lastSevenDays(state, now);
+
+  const recency = dsl === null ? 'No desserts logged yet.'
+    : dsl === 0 ? 'You had a dessert today.'
+    : "It's been " + dsl + ' day' + (dsl === 1 ? '' : 's') + ' since your last dessert.';
+
+  const safe = av.affordable
+    ? "Yes — you've banked " + av.bankedDesserts + ' dessert' + (av.bankedDesserts === 1 ? '' : 's') + '.'
+    : 'Not yet — ' + av.pointsNeeded + ' more points (about ' + av.cleanDaysNeeded + ' clean day' + (av.cleanDaysNeeded === 1 ? '' : 's') + ').';
+
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+
+  const banner = el('div', 'banner');
+  banner.innerHTML = '<b>UNSTYLED SCAFFOLDING</b> — this proves the mechanic works. The real Toofies design comes next, through the design step.';
+  app.appendChild(banner);
+
+  const head = el('header', 'title');
+  head.appendChild(el('h1', null, 'Toofies'));
+  const tb = el('button', 'themebtn', 'Theme');
+  tb.type = 'button';
+  tb.addEventListener('click', toggleTheme);
+  head.appendChild(tb);
+  app.appendChild(head);
+
+  app.appendChild(card('When did I last have a dessert?', [
+    p('big', recency),
+    p('muted', clean ? 'Clean so far today.' : 'Logged one today.'),
+  ]));
+
+  app.appendChild(card('Am I safe to have a dessert?', [
+    p('big ' + (av.affordable ? 'good' : 'warn'), safe),
+    p('muted', 'Balance ' + av.balance + ' / ' + av.cost + ' pts · +' + pending + ' banks tonight'),
+  ]));
+
+  const streakKids = [ el('div', 'streak-num', String(streak)) ];
+  if (milestone !== null) streakKids.push(p('muted', 'Milestone: ' + milestone + ' days 🦷'));
+  app.appendChild(card('Days on plan', streakKids));
+
+  const logCard = card('Log a dessert', []);
+  const chips = el('div', 'chips');
+  QUICK_LOG.forEach((kind) => {
+    const b = el('button', 'chip', TREATS[kind].emoji + ' ' + TREATS[kind].name);
+    b.type = 'button';
+    b.addEventListener('click', () => logDessert(kind));
+    chips.appendChild(b);
+  });
+  logCard.appendChild(chips);
+  app.appendChild(logCard);
+
+  const weekCard = card('Last 7 days', []);
+  const weekRow = el('div', 'week');
+  week.forEach((d) => {
+    const isToday = d.label === 'Today';
+    const dd = el('div', 'day' + (d.count > 0 ? ' has' : ' clean') + (isToday ? ' today' : ''));
+    dd.appendChild(el('div', 'count', d.count > 0 ? String(d.count) : '·'));
+    dd.appendChild(el('div', 'lbl', d.label.slice(0, 3)));
+    weekRow.appendChild(dd);
+  });
+  weekCard.appendChild(weekRow);
+  app.appendChild(weekCard);
+
+  if (state.entries.length > 0) {
+    const rb = el('button', 'resetbtn', 'Reset to empty (start fresh)');
+    rb.type = 'button';
+    rb.addEventListener('click', reset);
+    app.appendChild(rb);
+  }
+
+  const foot = el('footer', 'note');
+  foot.innerHTML = 'Live preview of the real ported economy engine (points · streak · forgiveness). '
+    + 'Loaded with 5 example clean days so the mechanic is visible — tap a dessert to watch points spend, or Reset for the true first-run screen. '
+    + 'Saved on this device only.';
+  app.appendChild(foot);
+}
+
+function card(title, children) {
+  const c = el('section', 'card');
+  c.appendChild(p('eyebrow', title));
+  children.forEach((k) => c.appendChild(k));
+  return c;
+}
+function p(cls, text) { const n = el('p', cls); n.textContent = text; return n; }
+
+function toggleTheme() {
+  const root = document.documentElement;
+  const cur = root.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : cur === 'light' ? 'dark'
+    : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark');
+  root.setAttribute('data-theme', next);
+}
+
+render();
+</script>
