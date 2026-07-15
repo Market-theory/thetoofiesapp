@@ -59,6 +59,90 @@ D16 (iPhone-only), D17 (widget in v1), D18 (notifications), D19–D21 (name,
 pricing, launch), D22–D26 (social/location/discovery specifics — deferred to
 later layers).
 
+---
+
+## 🆕 New inputs — 2026-07-15 collaborator working session
+
+Source: the founder's recorded session with a prospective build collaborator
+(the person being added to the repo). Arrangement: **donation-based + rev-share,
+contract to be drafted**; collaborator has high near-term bandwidth and an
+audience that can supply beta testers, and can start once added + handed the
+PRD/build spec. **Only Toofies-relevant build intel is captured here** — the
+session's unrelated threads (AI-music distribution, NFTs/blockchain, the
+collaborator's separate education platform) are intentionally excluded.
+
+**Confirmed — reinforces the ratified direction (no change):** positioning =
+playful, guilt-free, "be thoughtful about consumption in a way that feels good —
+*not* a calorie tracker"; broad-market bet ("a lot of people eat dessert");
+fun/gamified; GTM instinct = dessert- and foot-traffic-dense metros.
+
+### D28 · Delivery / stack approach 🔴 — NEW, HIGH IMPACT — *revisits D27*
+The collaborator recommends: design the **UI in Framer** (its new AI builder),
+ship as a **PWA** (installable web app), then wrap into iOS + Android apps.
+**Honest assessment — not adopted on say-so:**
+- ✅ **Framer for *design* is genuinely good advice.** UI polish is the real weak
+  spot (founder previously hired a UI designer for another app). Framer + Dribbble
+  + Mobbin to produce the **visual direction** is a strong complement to the
+  design gate (D11–D15).
+- ⛔ **PWA as the *app architecture* has a Toofies-specific fatal flaw:** iOS
+  **PWAs cannot read HealthKit** — so the **steps→points activity mechanic (D8,
+  "being active buys sweetness") cannot work on iOS in a PWA.** PWAs also **can't
+  do home-screen widgets** (research's #1 feature, D17) and have weak/flaky iOS
+  notifications (D18); thin web-wrapper apps also risk **App Store 4.2
+  ("minimum functionality") rejection**.
+- ✅ **The ratified Expo/RN stack (D27) already** gives native HealthKit, widgets,
+  notifications, real App Store **and** Google Play apps from one codebase, plus
+  web + Expo Go preview — and the economy engine is **already ported and building**
+  on it.
+- 🟡 **Recommended synthesis (best of both):** (1) use **Framer/Dribbble/Mobbin for
+  the UI design**; (2) **keep Expo/RN as the build target** (already cross-platform,
+  already supports the health/widget/notification features this exact product
+  needs, already ported); (3) if a cheap, fast **validation** of the recency-only
+  core is wanted, that core has **no HealthKit dependency**, so it *could* ship as a
+  quick PWA to test the loop while the full native app is built in Expo — this maps
+  cleanly onto the already-ratified recency-core-vs-economy split.
+  **Founder decides. Until then D27 (Expo/RN) stands — do not rebuild in Framer/PWA.**
+
+### D29 · Developer-account & app ownership 🔴 — NEW
+Collaborator strongly recommends enrolling the **Apple Developer Program under an
+LLC/Corp, not a personal name** (personal enrollment shows your legal name as the
+App Store seller). Founder has a **Delaware C-Corp** and wants apps org-owned
+(future roll-up / angel / VC). **Rec (🟡):** enroll Apple + Google developer
+accounts under the corp. Notes: Apple org enrollment needs **EIN + a D-U-N-S
+number**; if already incorporated a DUNS may **auto-populate from the EIN** during
+enrollment (verify). Founder likely already has a **Google** developer account;
+**Apple not yet** ($99/yr).
+
+### Publishing logistics captured (fold into the submission docs)
+- **Google Play (new/personal accounts):** closed testing requires **≥12 testers
+  for 14 continuous days** before production access — collaborator can supply
+  testers (verify current policy; org accounts may differ).
+- **Age rating** must be set honestly per store (Toofies → expected 4+/Everyone).
+- **Apple subscriptions lengthen review** — another reason to ship **free v1**
+  (matches D10 rec), add IAP later.
+- **Android is now explicitly in scope** (Google Play planned) → **revisit D16**
+  (was "iPhone-only rec"); Expo/RN already covers both platforms.
+- Public-launch intent (both stores + a marketing push) **nudges D3 toward
+  "public launch"** — founder to confirm.
+
+### D4 · 🔁 RE-OPENED 2026-07-15 — founder signals intent to COLLECT information
+The founder stated the intent is to **collect user information**, which **reverses
+the 2026-07-13 ratification of D4 (on-device only, "Data Not Collected")** and
+supersedes the privacy posture the current PRD + code are built on. This is the
+single highest-impact architectural fork in the product, so it is re-opened —
+**not** silently applied — pending scope clarification. Blocks: D1 (positioning
+weight), D2 (v1 scope), D5 (backend), D10 (monetization), the App Store/Play
+privacy labels, and the whole security/legal surface. Questions to resolve
+(see reply): **what** data, **why**, and **when** (v1 vs later). Honest tension
+to weigh (R6): "Data Not Collected" was a genuine competitive strength and zero
+legal surface; collecting flips on GDPR/CCPA, in-app account deletion (Apple
+requirement), a secure backend + breach liability, and a full privacy label —
+in exchange for enabling accounts/social/growth. **Founder decides with eyes
+open.** Until resolved, D4's status is CONTESTED and no data-collection code or
+backend is built.
+
+---
+
 ## Tier 0 — Product definition (blocks almost everything)
 
 ### D1 · Primary user & positioning 🔴  — *blocks D2, D10, D11–15, D19*
